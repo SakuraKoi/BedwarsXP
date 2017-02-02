@@ -1,0 +1,14 @@
+name: BedwarsXP
+main: ldcr.BedwarsXP.Main
+version: 1.2
+author: Ldcr
+depend: [BedwarsRel]
+commands:
+  bedwarsxp:
+    description: 经验起床-重载配置
+    usage: /bedwarsxp
+    aliases: [bwxp]
+permissions:
+  bedwarsxp.admin:
+    description: 经验起床相关管理权限.
+    default: op
