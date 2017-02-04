@@ -90,7 +90,7 @@ public class ShopReplacer implements Runnable {
 			List<MerchantCategory> order = new ArrayList<MerchantCategory>(map.values());
 		    Collections.sort(order, new MerchantCategoryComparator());
 			for (Player pl : game.getPlayers()) {
-				ItemShop Shop = new ItemShop(order);
+				ItemShop Shop = new ItemShop(order,game);
 				shops.put(pl, Shop);
 			}
 			ReflectionUtils.setPrivateValue(game,
