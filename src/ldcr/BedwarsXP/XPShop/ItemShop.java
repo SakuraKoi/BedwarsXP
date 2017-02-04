@@ -31,7 +31,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 
 public class ItemShop extends NewItemShop {
 	private Game bedwars;
-	public ItemShop(List<MerchantCategory> cate,Game bw) {
+
+	public ItemShop(List<MerchantCategory> cate, Game bw) {
 		super(cate);
 		categories = cate;
 		bedwars = bw;
@@ -421,7 +422,8 @@ public class ItemShop extends NewItemShop {
 				}
 			}
 		} else {
-			XPManager.takeXP(bedwars,player, ((XPVillagerTrade) trade).getXP());
+			XPManager
+					.takeXP(bedwars, player, ((XPVillagerTrade) trade).getXP());
 		}
 		ItemStack addingItem = item.clone();
 		ItemMeta meta = addingItem.getItemMeta();
@@ -437,7 +439,8 @@ public class ItemShop extends NewItemShop {
 		meta.setLore(lore);
 		addingItem.setItemMeta(meta);
 
-		HashMap<Integer,? extends ItemStack> notStored = inventory.addItem(new ItemStack[] { addingItem });
+		HashMap<Integer, ? extends ItemStack> notStored = inventory
+				.addItem(new ItemStack[] { addingItem });
 		if (notStored.size() > 0) {
 			ItemStack notAddedItem = (ItemStack) notStored.get(Integer
 					.valueOf(0));
@@ -460,7 +463,7 @@ public class ItemShop extends NewItemShop {
 
 	private boolean hasEnoughRessource(Player player, VillagerTrade trade) {
 		if (trade instanceof XPVillagerTrade) {
-			return XPManager.hasEnoughXP(bedwars,player,
+			return XPManager.hasEnoughXP(bedwars, player,
 					((XPVillagerTrade) trade).getXP());
 		} else {
 			ItemStack item1 = trade.getItem1();

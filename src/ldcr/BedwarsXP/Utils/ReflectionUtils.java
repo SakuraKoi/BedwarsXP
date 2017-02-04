@@ -17,8 +17,8 @@ public class ReflectionUtils {
 		Field field = clazz.getDeclaredField(f);
 		return field;
 	}
-	public static boolean isClassFound(String class_path)
-	{
+
+	public static boolean isClassFound(String class_path) {
 		try {
 			Class.forName(class_path);
 		} catch (ClassNotFoundException e) {

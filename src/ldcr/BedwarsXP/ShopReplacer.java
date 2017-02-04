@@ -29,23 +29,25 @@ import org.bukkit.entity.Player;
 public class ShopReplacer implements Runnable {
 	Game game;
 	CommandSender s;
-	public ShopReplacer(Game e,CommandSender sender) {
-		game=e;
-		s=sender;
+
+	public ShopReplacer(Game e, CommandSender sender) {
+		game = e;
+		s = sender;
 	}
-	public static void replaceShop(Game bw,CommandSender sender)
-	{
-		Bukkit.getScheduler().runTaskLater(ldcr.BedwarsXP.Main.plugin,new ShopReplacer(bw,sender), 20);
+
+	public static void replaceShop(Game bw, CommandSender sender) {
+		Bukkit.getScheduler().runTaskLater(ldcr.BedwarsXP.Main.plugin,
+				new ShopReplacer(bw, sender), 20);
 	}
+
 	@Override
 	public void run() {
 		HashMap<Material, MerchantCategory> map = game.getItemShopCategories();
 		if (Config.Full_XP_Bedwars) {
-			Iterator<Entry<Material, MerchantCategory>> i1 = map
-					.entrySet().iterator();
+			Iterator<Entry<Material, MerchantCategory>> i1 = map.entrySet()
+					.iterator();
 			for (; i1.hasNext();) {
-				Entry<Material, MerchantCategory> en = i1
-						.next();
+				Entry<Material, MerchantCategory> en = i1.next();
 				MerchantCategory m = en.getValue();
 				ArrayList<VillagerTrade> t = m.getOffers();
 				ArrayList<XPVillagerTrade> n = new ArrayList<XPVillagerTrade>();
@@ -53,10 +55,10 @@ public class ShopReplacer implements Runnable {
 					n.add(new XPVillagerTrade(t.get(i)));
 				}
 				try {
-					ReflectionUtils.setPrivateValue(m,
-							"offers", n);
+					ReflectionUtils.setPrivateValue(m, "offers", n);
 				} catch (Exception e1) {
-					s.sendMessage("§6§l[BedwarsXP] §c为地图 " + game.getName() + " 替换原始商店为经验商店失败");
+					s.sendMessage("§6§l[BedwarsXP] §c为地图 " + game.getName()
+							+ " 替换原始商店为经验商店失败");
 					e1.printStackTrace();
 				}
 				map.put(en.getKey(), m);
@@ -65,39 +67,36 @@ public class ShopReplacer implements Runnable {
 		if (Config.Add_Res_Shop) {
 			ArrayList<VillagerTrade> trades = new ArrayList<VillagerTrade>();
 			trades.add(new XPVillagerTrade(RessourceSpawner
-					.createSpawnerStackByConfig(Main
-							.getInstance().getConfig()
+					.createSpawnerStackByConfig(Main.getInstance().getConfig()
 							.get("ressource.bronze"))));
 			trades.add(new XPVillagerTrade(RessourceSpawner
-					.createSpawnerStackByConfig(Main
-							.getInstance().getConfig()
+					.createSpawnerStackByConfig(Main.getInstance().getConfig()
 							.get("ressource.iron"))));
 			trades.add(new XPVillagerTrade(RessourceSpawner
-					.createSpawnerStackByConfig(Main
-							.getInstance().getConfig()
+					.createSpawnerStackByConfig(Main.getInstance().getConfig()
 							.get("ressource.gold"))));
-			MerchantCategory mc = new MerchantCategory(
-					"§6§l经验兑换资源", Material.EXP_BOTTLE, trades,
-					ListUtils.newList("§a将你的经验兑换成物品"), 3,
-					"bw.base");
+			MerchantCategory mc = new MerchantCategory("§6§l经验兑换资源",
+					Material.EXP_BOTTLE, trades,
+					ListUtils.newList("§a将你的经验兑换成物品"), 3, "bw.base");
 			map.put(Material.EXP_BOTTLE, mc);
 		}
 		try {
-			Field itemshops = ReflectionUtils.getField(
-					game, "newItemShops");
+			Field itemshops = ReflectionUtils.getField(game, "newItemShops");
 			itemshops.setAccessible(true);
 			HashMap<Player, NewItemShop> shops = new HashMap<Player, NewItemShop>();
-			List<MerchantCategory> order = new ArrayList<MerchantCategory>(map.values());
-		    Collections.sort(order, new MerchantCategoryComparator());
+			List<MerchantCategory> order = new ArrayList<MerchantCategory>(
+					map.values());
+			Collections.sort(order, new MerchantCategoryComparator());
 			for (Player pl : game.getPlayers()) {
-				ItemShop Shop = new ItemShop(order,game);
+				ItemShop Shop = new ItemShop(order, game);
 				shops.put(pl, Shop);
 			}
-			ReflectionUtils.setPrivateValue(game,
-					"newItemShops", shops);
-			s.sendMessage("§6§l[BedwarsXP] §b为地图 " + game.getName() + " 替换经验商店成功!");
+			ReflectionUtils.setPrivateValue(game, "newItemShops", shops);
+			s.sendMessage("§6§l[BedwarsXP] §b为地图 " + game.getName()
+					+ " 替换经验商店成功!");
 		} catch (Exception e1) {
-			s.sendMessage("§6§l[BedwarsXP] §c为地图 " + game.getName() + " 初始化经验商店时出错");
+			s.sendMessage("§6§l[BedwarsXP] §c为地图 " + game.getName()
+					+ " 初始化经验商店时出错");
 			e1.printStackTrace();
 		}
 	}

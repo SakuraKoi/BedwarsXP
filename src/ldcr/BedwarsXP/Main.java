@@ -16,8 +16,8 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		log = Bukkit.getConsoleSender();
 		sendConsoleMessage("§6§l[BedwarsXP] &b正在加载BedwarsXP经验起床插件");
-		if (!(ReflectionUtils.isClassFound("io.github.yannici.bedwars.Main") && ReflectionUtils.isClassFound("io.github.yannici.bedwars.SoundMachine")))
-		{
+		if (!(ReflectionUtils.isClassFound("io.github.yannici.bedwars.Main") && ReflectionUtils
+				.isClassFound("io.github.yannici.bedwars.SoundMachine"))) {
 			sendConsoleMessage("§6§l[BedwarsXP] &c本插件不支持你的BedwarsRel版本!");
 		}
 		Config.loadConfig();
@@ -30,5 +30,5 @@ public class Main extends JavaPlugin {
 	public static void sendConsoleMessage(String str) {
 		log.sendMessage(str.replaceAll("&", "§"));
 	}
-	
+
 }
