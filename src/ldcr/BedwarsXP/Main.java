@@ -19,6 +19,7 @@ public class Main extends JavaPlugin {
 		if (!(ReflectionUtils.isClassFound("io.github.yannici.bedwars.Main") && ReflectionUtils
 				.isClassFound("io.github.yannici.bedwars.SoundMachine"))) {
 			sendConsoleMessage("§6§l[BedwarsXP] &c本插件不支持你的BedwarsRel版本!");
+			Bukkit.getPluginManager().disablePlugin(this);
 		}
 		Config.loadConfig();
 		ActionBarUtils.load();
