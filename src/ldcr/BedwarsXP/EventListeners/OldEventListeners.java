@@ -1,8 +1,13 @@
-package ldcr.BedwarsXP;
+package ldcr.BedwarsXP.EventListeners;
 
+import ldcr.BedwarsXP.Config;
+import ldcr.BedwarsXP.Main;
+import ldcr.BedwarsXP.ShopReplacer;
+import ldcr.BedwarsXP.XPManager;
+import ldcr.BedwarsXP.Events.BedwarsXPPlayerDeathDropExpEvent;
 import ldcr.BedwarsXP.Utils.ActionBarUtils;
-import ldcr.BedwarsXP.XPShop.XPVillagerTrade;
-import io.github.yannici.bedwars.SoundMachine;
+import ldcr.BedwarsXP.XPShop.Res;
+import ldcr.BedwarsXP.Utils.SoundMachine;
 import io.github.yannici.bedwars.Events.BedwarsGameEndEvent;
 import io.github.yannici.bedwars.Events.BedwarsGameStartEvent;
 import io.github.yannici.bedwars.Game.Game;
@@ -20,7 +25,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class EventListeners implements Listener {
+public class OldEventListeners implements Listener {
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent e) {
 		Game bw = io.github.yannici.bedwars.Main.getInstance().getGameManager()
@@ -31,12 +36,12 @@ public class EventListeners implements Listener {
 		Player p = e.getPlayer();
 		Item entity = e.getItem();
 		ItemStack stack = entity.getItemStack();
-		int count = XPVillagerTrade.convertResToXP(stack);
+		int count = Res.convertResToXP(stack);
 		if (count == 0) {
 			return;
 		}
 		e.setCancelled(true);
-		XPManager.addXP(bw, p, count);
+		XPManager.addXP(bw.getName(), p, count);
 		p.playSound(p.getLocation(),
 				SoundMachine.get("ORB_PICKUP", "ENTITY_EXPERIENCE_ORB_PICKUP"),
 				10.0F, 1.0F);
@@ -76,17 +81,22 @@ public class EventListeners implements Listener {
 			return;
 		}
 		Player p = e.getEntity();
-		int to = 0;
+		int dropped = 0;
 		if (Config.isDirect) {
-			to = XPManager.getXP(bw, p) - (int) (Config.Death);
+			dropped = (int) (Config.Death);
 		} else {
-			to = XPManager.getXP(bw, p) - (int) (p.getLevel() * (Config.Death));
+			dropped = (int) (p.getLevel() * (Config.Death));
 		}
+		BedwarsXPPlayerDeathDropExpEvent event = new BedwarsXPPlayerDeathDropExpEvent(
+				bw.getName(), p, dropped);
+		Bukkit.getPluginManager().callEvent(event);
+		dropped = event.getDroppedXP();
+		int to = XPManager.getXP(bw.getName(), p) - dropped;
 		if (to < 0) {
 			to = 0;
 		}
 		e.setNewLevel(to);
-		XPManager.setXP(bw, p, to);
+		XPManager.setXP(bw.getName(), p, to);
 	}
 
 	@EventHandler
@@ -94,13 +104,13 @@ public class EventListeners implements Listener {
 		if (e.isCancelled()) {
 			return;
 		}
-		ShopReplacer.replaceShop(e.getGame(), Main.log);
+		ShopReplacer.replaceShop(e.getGame().getName(), Main.log);
 	}
 
 	@EventHandler
 	public void onBedWarsEnd(BedwarsGameEndEvent e) {
-		ShopReplacer.replaceShop(e.getGame(), Main.log);
-		XPManager.reset(e.getGame());
+		ShopReplacer.replaceShop(e.getGame().getName(), Main.log);
+		XPManager.reset(e.getGame().getName());
 	}
 
 	@EventHandler
@@ -115,7 +125,7 @@ public class EventListeners implements Listener {
 
 			@Override
 			public void run() {
-				XPManager.updateXPBar(bw, p);
+				XPManager.updateXPBar(bw.getName(), p);
 			}
 		}, 5);
 
@@ -128,6 +138,6 @@ public class EventListeners implements Listener {
 		if (bw == null) {
 			return;
 		}
-		XPManager.updateXPBar(bw, e.getPlayer());
+		XPManager.updateXPBar(bw.getName(), e.getPlayer());
 	}
 }

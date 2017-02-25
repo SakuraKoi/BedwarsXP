@@ -1,13 +1,13 @@
-package ldcr.BedwarsXP.XPShop;
+package ldcr.BedwarsXP.XPShop.bedwarsrel;
 
-import io.github.yannici.bedwars.ChatWriter;
-import io.github.yannici.bedwars.Game.Game;
-import io.github.yannici.bedwars.Main;
-import io.github.yannici.bedwars.SoundMachine;
-import io.github.yannici.bedwars.Utils;
-import io.github.yannici.bedwars.Shop.NewItemShop;
-import io.github.yannici.bedwars.Villager.MerchantCategory;
-import io.github.yannici.bedwars.Villager.VillagerTrade;
+import io.github.bedwarsrel.BedwarsRel.Utils.ChatWriter;
+import io.github.bedwarsrel.BedwarsRel.Game.Game;
+import io.github.bedwarsrel.BedwarsRel.Main;
+import ldcr.BedwarsXP.Utils.SoundMachine;
+import io.github.bedwarsrel.BedwarsRel.Utils.Utils;
+import io.github.bedwarsrel.BedwarsRel.Shop.NewItemShop;
+import io.github.bedwarsrel.BedwarsRel.Villager.MerchantCategory;
+import io.github.bedwarsrel.BedwarsRel.Villager.VillagerTrade;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +29,10 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
-public class ItemShop extends NewItemShop {
+public class XPItemShop extends NewItemShop {
 	private Game bedwars;
 
-	public ItemShop(List<MerchantCategory> cate, Game bw) {
+	public XPItemShop(List<MerchantCategory> cate, Game bw) {
 		super(cate);
 		categories = cate;
 		bedwars = bw;
@@ -422,8 +422,8 @@ public class ItemShop extends NewItemShop {
 				}
 			}
 		} else {
-			XPManager
-					.takeXP(bedwars, player, ((XPVillagerTrade) trade).getXP());
+			XPManager.takeXP(bedwars.getName(), player,
+					((XPVillagerTrade) trade).getXP());
 		}
 		ItemStack addingItem = item.clone();
 		ItemMeta meta = addingItem.getItemMeta();
@@ -463,7 +463,7 @@ public class ItemShop extends NewItemShop {
 
 	private boolean hasEnoughRessource(Player player, VillagerTrade trade) {
 		if (trade instanceof XPVillagerTrade) {
-			return XPManager.hasEnoughXP(bedwars, player,
+			return XPManager.hasEnoughXP(bedwars.getName(), player,
 					((XPVillagerTrade) trade).getXP());
 		} else {
 			ItemStack item1 = trade.getItem1();

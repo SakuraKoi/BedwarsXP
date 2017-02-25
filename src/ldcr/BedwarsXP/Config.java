@@ -1,8 +1,5 @@
 package ldcr.BedwarsXP;
 
-import io.github.yannici.bedwars.Main;
-import io.github.yannici.bedwars.Game.RessourceSpawner;
-
 import java.io.File;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -81,12 +78,38 @@ public class Config {
 			ldcr.BedwarsXP.Main
 					.sendConsoleMessage("§6§l[BedwarsXP] &a完全经验起床模式已启动");
 		}
-		Bedwars_Brick_Type = RessourceSpawner.createSpawnerStackByConfig(
-				Main.getInstance().getConfig().get("ressource.bronze"))
-				.getType();
-		Bedwars_Iron_Type = RessourceSpawner.createSpawnerStackByConfig(
-				Main.getInstance().getConfig().get("ressource.iron")).getType();
-		Bedwars_Gold_Type = RessourceSpawner.createSpawnerStackByConfig(
-				Main.getInstance().getConfig().get("ressource.gold")).getType();
+		if (Main.isOldBedwarsPlugin) {
+			Bedwars_Brick_Type = io.github.yannici.bedwars.Game.RessourceSpawner
+					.createSpawnerStackByConfig(
+							io.github.yannici.bedwars.Main.getInstance()
+									.getConfig().get("ressource.bronze"))
+					.getType();
+			Bedwars_Iron_Type = io.github.yannici.bedwars.Game.RessourceSpawner
+					.createSpawnerStackByConfig(
+							io.github.yannici.bedwars.Main.getInstance()
+									.getConfig().get("ressource.iron"))
+					.getType();
+			Bedwars_Gold_Type = io.github.yannici.bedwars.Game.RessourceSpawner
+					.createSpawnerStackByConfig(
+							io.github.yannici.bedwars.Main.getInstance()
+									.getConfig().get("ressource.gold"))
+					.getType();
+		} else {
+			Bedwars_Brick_Type = io.github.bedwarsrel.BedwarsRel.Game.RessourceSpawner
+					.createSpawnerStackByConfig(
+							io.github.bedwarsrel.BedwarsRel.Main.getInstance()
+									.getConfig().get("ressource.bronze"))
+					.getType();
+			Bedwars_Iron_Type = io.github.bedwarsrel.BedwarsRel.Game.RessourceSpawner
+					.createSpawnerStackByConfig(
+							io.github.bedwarsrel.BedwarsRel.Main.getInstance()
+									.getConfig().get("ressource.iron"))
+					.getType();
+			Bedwars_Gold_Type = io.github.bedwarsrel.BedwarsRel.Game.RessourceSpawner
+					.createSpawnerStackByConfig(
+							io.github.bedwarsrel.BedwarsRel.Main.getInstance()
+									.getConfig().get("ressource.gold"))
+					.getType();
+		}
 	}
 }

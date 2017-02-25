@@ -1,6 +1,6 @@
 name: BedwarsXP
 main: ldcr.BedwarsXP.Main
-version: 1.3
+version: 1.4
 author: Ldcr
 depend: [BedwarsRel]
 commands:

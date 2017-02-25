@@ -2,22 +2,21 @@ package ldcr.BedwarsXP;
 
 import java.util.HashMap;
 
-import io.github.yannici.bedwars.Game.Game;
-
 import org.bukkit.entity.Player;
 
 public class XPManager {
-	private static HashMap<Game, HashMap<Player, Integer>> xp = new HashMap<Game, HashMap<Player, Integer>>();
+	private static HashMap<String, HashMap<Player, Integer>> xp = new HashMap<String, HashMap<Player, Integer>>();
 
-	public static void reset(Game bw) {
+	public static void reset(String bw) {
 		xp.remove(bw);
+
 	}
 
-	public static void updateXPBar(Game bw, Player p) {
+	public static void updateXPBar(String bw, Player p) {
 		p.setLevel(get(bw, p));
 	}
 
-	private static void set(Game bw, Player p, int count) {
+	private static void set(String bw, Player p, int count) {
 		HashMap<Player, Integer> map = xp.get(bw);
 		if (map == null) {
 			map = new HashMap<Player, Integer>();
@@ -32,7 +31,7 @@ public class XPManager {
 		updateXPBar(bw, p);
 	}
 
-	private static int get(Game bw, Player p) {
+	private static int get(String bw, Player p) {
 		HashMap<Player, Integer> map = xp.get(bw);
 		if (map == null) {
 			map = new HashMap<Player, Integer>();
@@ -46,27 +45,32 @@ public class XPManager {
 		return value;
 	}
 
-	public static void setXP(Game bw, Player p, int count) {
+	public static void setXP(String bw, Player p, int count) {
 		set(bw, p, count);
 	}
 
-	public static int getXP(Game bw, Player p) {
+	public static int getXP(String bw, Player p) {
 		return get(bw, p);
 	}
 
-	public static void addXP(Game bw, Player p, int count) {
+	public static void addXP(String bw, Player p, int count) {
 		set(bw, p, get(bw, p) + count);
 	}
 
+<<<<<<< Updated upstream
 	public static boolean takeXP(Game bw, Player p, int count) {
 		if (get(bw, p) < count) {
+=======
+	public static boolean takeXP(String bw, Player p, int count) {
+		if (!hasEnoughXP(bw, p, count)) {
+>>>>>>> Stashed changes
 			return false;
 		}
 		set(bw, p, get(bw, p) - count);
 		return true;
 	}
 
-	public static boolean hasEnoughXP(Game bw, Player p, int count) {
+	public static boolean hasEnoughXP(String bw, Player p, int count) {
 		return get(bw, p) >= count;
 	}
 }
