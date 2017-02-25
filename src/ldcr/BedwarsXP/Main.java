@@ -11,6 +11,12 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
+	
+	/*
+		TODO: 配置文件加入功能[指定的游戏启用经验起床]
+	
+	
+	*/
 	public static Plugin plugin;
 	public static CommandSender log;
 	public static boolean isOldBedwarsPlugin = true;

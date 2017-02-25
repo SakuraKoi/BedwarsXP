@@ -56,14 +56,9 @@ public class XPManager {
 	public static void addXP(String bw, Player p, int count) {
 		set(bw, p, get(bw, p) + count);
 	}
-
-<<<<<<< Updated upstream
-	public static boolean takeXP(Game bw, Player p, int count) {
-		if (get(bw, p) < count) {
-=======
 	public static boolean takeXP(String bw, Player p, int count) {
 		if (!hasEnoughXP(bw, p, count)) {
->>>>>>> Stashed changes
+
 			return false;
 		}
 		set(bw, p, get(bw, p) - count);
