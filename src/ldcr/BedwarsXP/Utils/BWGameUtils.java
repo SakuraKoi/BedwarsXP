@@ -8,6 +8,31 @@ import ldcr.BedwarsXP.Main;
 import ldcr.BedwarsXP.ShopReplacer;
 
 public class BWGameUtils {
+	public static boolean isGameExists(String bw) {
+		if (Main.isOldBedwarsPlugin) {
+			return !io.github.yannici.bedwars.Main.getInstance()
+					.getGameManager().getGame(bw).equals(null);
+		} else {
+			return !io.github.bedwarsrel.BedwarsRel.Main.getInstance()
+					.getGameManager().getGame(bw).equals(null);
+		}
+	}
+
+	public static boolean isGameRunning(String bw) {
+		if (Main.isOldBedwarsPlugin) {
+			return io.github.yannici.bedwars.Main.getInstance()
+					.getGameManager().getGame(bw).getState()
+					.equals(io.github.yannici.bedwars.Game.GameState.RUNNING);
+		} else {
+			return io.github.bedwarsrel.BedwarsRel.Main
+					.getInstance()
+					.getGameManager()
+					.getGame(bw)
+					.getState()
+					.equals(io.github.bedwarsrel.BedwarsRel.Game.GameState.RUNNING);
+		}
+	}
+
 	public static boolean isAnyBedwarsRunning() {
 		if (Main.isOldBedwarsPlugin) {
 			ArrayList<io.github.yannici.bedwars.Game.Game> bw = io.github.yannici.bedwars.Main

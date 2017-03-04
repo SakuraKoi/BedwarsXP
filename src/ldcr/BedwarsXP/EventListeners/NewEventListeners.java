@@ -33,6 +33,9 @@ public class NewEventListeners implements Listener {
 		if (bw == null) {
 			return;
 		}
+		if (!Config.isGameEnabledXP(bw.getName())) {
+			return;
+		}
 		Player p = e.getPlayer();
 		Item entity = e.getItem();
 		ItemStack stack = entity.getItemStack();
@@ -64,8 +67,12 @@ public class NewEventListeners implements Listener {
 		if (e.getInventory().equals(null)) {
 			return;
 		}
-		if (io.github.bedwarsrel.BedwarsRel.Main.getInstance().getGameManager()
-				.getGameOfPlayer((Player) e.getPlayer()).equals(null)) {
+		Game bw = io.github.bedwarsrel.BedwarsRel.Main.getInstance()
+				.getGameManager().getGameOfPlayer((Player) e.getPlayer());
+		if (bw.equals(null)) {
+			return;
+		}
+		if (!Config.isGameEnabledXP(bw.getName())) {
 			return;
 		}
 		if (e.getInventory().getType().equals(InventoryType.ANVIL)) {
@@ -78,6 +85,9 @@ public class NewEventListeners implements Listener {
 		Game bw = io.github.bedwarsrel.BedwarsRel.Main.getInstance()
 				.getGameManager().getGameOfPlayer(e.getEntity());
 		if (bw == null) {
+			return;
+		}
+		if (!Config.isGameEnabledXP(bw.getName())) {
 			return;
 		}
 		Player p = e.getEntity();
@@ -104,12 +114,17 @@ public class NewEventListeners implements Listener {
 		if (e.isCancelled()) {
 			return;
 		}
+		if (!Config.isGameEnabledXP(e.getGame().getName())) {
+			return;
+		}
 		ShopReplacer.replaceShop(e.getGame().getName(), Main.log);
 	}
 
 	@EventHandler
 	public void onBedWarsEnd(BedwarsGameEndEvent e) {
-		ShopReplacer.replaceShop(e.getGame().getName(), Main.log);
+		if (!Config.isGameEnabledXP(e.getGame().getName())) {
+			return;
+		}
 		XPManager.reset(e.getGame().getName());
 	}
 
@@ -118,6 +133,9 @@ public class NewEventListeners implements Listener {
 		final Game bw = io.github.bedwarsrel.BedwarsRel.Main.getInstance()
 				.getGameManager().getGameOfPlayer(e.getPlayer());
 		if (bw == null) {
+			return;
+		}
+		if (!Config.isGameEnabledXP(bw.getName())) {
 			return;
 		}
 		final Player p = e.getPlayer();
@@ -136,6 +154,9 @@ public class NewEventListeners implements Listener {
 		Game bw = io.github.bedwarsrel.BedwarsRel.Main.getInstance()
 				.getGameManager().getGameOfPlayer(e.getPlayer());
 		if (bw == null) {
+			return;
+		}
+		if (!Config.isGameEnabledXP(bw.getName())) {
 			return;
 		}
 		XPManager.updateXPBar(bw.getName(), e.getPlayer());

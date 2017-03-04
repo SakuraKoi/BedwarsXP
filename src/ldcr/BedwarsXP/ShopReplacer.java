@@ -8,6 +8,9 @@ import org.bukkit.command.CommandSender;
 
 public class ShopReplacer {
 	public static void replaceShop(String bw, CommandSender sender) {
+		if (!Config.isGameEnabledXP(bw)) {
+			return;
+		}
 		if (Main.isOldBedwarsPlugin) {
 			Bukkit.getScheduler().runTaskLater(ldcr.BedwarsXP.Main.plugin,
 					new OldShopReplacer(bw, sender), 20);

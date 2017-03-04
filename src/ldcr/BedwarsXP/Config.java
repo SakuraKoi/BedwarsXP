@@ -1,8 +1,12 @@
 package ldcr.BedwarsXP;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.HashSet;
+
+import ldcr.BedwarsXP.Utils.ListUtils;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -10,6 +14,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Config {
 	static YamlConfiguration config;
 	static File file;
+
+	static YamlConfiguration enable;
+	static File e_file;
 
 	public static int XP_Brick;
 	public static int XP_Iron;
@@ -26,6 +33,8 @@ public class Config {
 	public static Material Bedwars_Brick_Type;
 	public static Material Bedwars_Iron_Type;
 	public static Material Bedwars_Gold_Type;
+
+	private static HashSet<String> enabled = new HashSet<String>();
 
 	public static void loadConfig() {
 		ldcr.BedwarsXP.Main.sendConsoleMessage("§6§l[BedwarsXP] &b开始加载配置文件");
@@ -111,5 +120,33 @@ public class Config {
 									.getConfig().get("ressource.gold"))
 					.getType();
 		}
+		e_file = new File("plugins/BedwarsXP/enabledGames.yml");
+		if (!e_file.exists()) {
+			ldcr.BedwarsXP.Main
+					.sendConsoleMessage("§6§l[BedwarsXP] &c注意,在新版本中你需要手动使用/bwxp enable来启用游戏的经验起床模式");
+			ldcr.BedwarsXP.Main.plugin.saveResource("enabledGames.yml", true);
+		}
+		enable = YamlConfiguration.loadConfiguration(e_file);
+		enabled.addAll(enable.getStringList("enabledGame"));
+	}
+
+	public static String setGameEnableXP(String bw, boolean isEnabled) {
+		if (isEnabled) {
+			enabled.add(bw);
+		} else {
+			enabled.remove(bw);
+		}
+		enable.set("enabledGame", ListUtils.hashSetToList(enabled));
+		try {
+			enable.save(e_file);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return e.getLocalizedMessage();
+		}
+		return "";
+	}
+
+	public static boolean isGameEnabledXP(String bw) {
+		return enabled.contains(bw);
 	}
 }
