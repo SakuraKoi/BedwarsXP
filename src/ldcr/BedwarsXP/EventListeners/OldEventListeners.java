@@ -69,7 +69,7 @@ public class OldEventListeners implements Listener {
 		}
 		Game bw = io.github.yannici.bedwars.Main.getInstance().getGameManager()
 				.getGameOfPlayer((Player) e.getPlayer());
-		if (bw.equals(null)) {
+		if (bw==null) {
 			return;
 		}
 		if (!Config.isGameEnabledXP(bw.getName())) {
