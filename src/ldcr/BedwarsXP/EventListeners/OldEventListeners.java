@@ -61,15 +61,15 @@ public class OldEventListeners implements Listener {
 
 	@EventHandler
 	public void onAnvilOpen(InventoryOpenEvent e) {
-		if (e.getPlayer()==null) {
+		if (e.getPlayer().equals(null)) {
 			return;
 		}
-		if (e.getInventory()==null) {
+		if (e.getInventory().equals(null)) {
 			return;
 		}
 		Game bw = io.github.yannici.bedwars.Main.getInstance().getGameManager()
 				.getGameOfPlayer((Player) e.getPlayer());
-		if (bw.equals(null)) {
+		if (bw==null) {
 			return;
 		}
 		if (!Config.isGameEnabledXP(bw.getName())) {
