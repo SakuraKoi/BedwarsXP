@@ -51,10 +51,11 @@ public class NewEventListeners implements Listener {
 		if (!Config.Message.equals("")) {
 			ActionBarUtils.sendActionBar(p,
 					Config.Message.replaceAll("%xp%", Integer.toString(count)));
-			if (!ActionBarUtils.works) {
-				p.sendMessage(Config.Message.replaceAll("%xp%",
-						Integer.toString(count)));
-			}
+			/*
+			 * if (!ActionBarUtils.works) {
+			 * p.sendMessage(Config.Message.replaceAll("%xp%",
+			 * Integer.toString(count))); }
+			 */
 		}
 		entity.remove();
 	}
@@ -69,7 +70,7 @@ public class NewEventListeners implements Listener {
 		}
 		Game bw = io.github.bedwarsrel.BedwarsRel.Main.getInstance()
 				.getGameManager().getGameOfPlayer((Player) e.getPlayer());
-		if (bw==null) {
+		if (bw == null) {
 			return;
 		}
 		if (!Config.isGameEnabledXP(bw.getName())) {

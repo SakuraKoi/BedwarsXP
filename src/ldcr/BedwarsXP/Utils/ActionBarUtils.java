@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 
 public class ActionBarUtils {
 	public static Plugin plugin;
-	public static boolean works = true;
+	// public static boolean works = true;
 	public static String nmsver;
 	private static boolean useOldMethods = false;
 
@@ -63,7 +63,8 @@ public class ActionBarUtils {
 			Method m5 = pc.getClass().getDeclaredMethod("sendPacket", c5);
 			m5.invoke(pc, ppoc);
 		} catch (Exception ex) {
-			works = false;
+			ex.printStackTrace();
+			player.sendMessage(message);
 		}
 	}
 

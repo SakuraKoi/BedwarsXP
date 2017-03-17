@@ -13,8 +13,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
 	/*
-	 * TODO: ÔÝÎÞ
+	 * TODO: none
 	 */
+
 	public static Plugin plugin;
 	public static CommandSender log;
 	public static boolean isOldBedwarsPlugin = true;

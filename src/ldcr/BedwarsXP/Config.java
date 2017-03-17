@@ -4,23 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import ldcr.BedwarsXP.Utils.ListUtils;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config {
+	private static int ConfigVersion = 1;
 	static YamlConfiguration config;
 	static File file;
 
 	static YamlConfiguration enable;
 	static File e_file;
-
-	public static int XP_Brick;
-	public static int XP_Iron;
-	public static int XP_Gold;
 
 	public static String Message;
 	public static boolean Add_Res_Shop;
@@ -29,10 +28,7 @@ public class Config {
 	public static boolean isDirect;
 
 	public static boolean Full_XP_Bedwars;
-
-	public static Material Bedwars_Brick_Type;
-	public static Material Bedwars_Iron_Type;
-	public static Material Bedwars_Gold_Type;
+	public static HashMap<Material, Integer> res = new HashMap<Material, Integer>();
 
 	private static HashSet<String> enabled = new HashSet<String>();
 
@@ -45,11 +41,20 @@ public class Config {
 			ldcr.BedwarsXP.Main.plugin.saveResource("config.yml", true);
 		}
 		config = YamlConfiguration.loadConfiguration(file);
-		XP_Brick = config.getInt("XP.Brick");
-		XP_Iron = config.getInt("XP.Iron");
-		XP_Gold = config.getInt("XP.Gold");
-		ldcr.BedwarsXP.Main.sendConsoleMessage("§6§l[BedwarsXP] &a资源价值: &4"
-				+ XP_Brick + "&a/&7" + XP_Iron + "&a/&6" + XP_Gold);
+	
+		if (config.getInt("ConfigVersion") < ConfigVersion) {
+			ldcr.BedwarsXP.Main
+					.sendConsoleMessage("§6§l[BedwarsXP] &4您的配置文件版本过老无法加载");
+			file.renameTo(new File("plugins/BedwarsXP/config.yml.bak"));
+			ldcr.BedwarsXP.Main
+					.sendConsoleMessage("§6§l[BedwarsXP] &c已备份您的配置文件为 [config.yml.bak] ,开始初始化新版本配置文件");
+			ldcr.BedwarsXP.Main.plugin.saveResource("config.yml", true);
+			ldcr.BedwarsXP.Main
+					.sendConsoleMessage("§6§l[BedwarsXP] &a配置文件初始化完成,继续加载配置...");
+			file = new File("plugins/BedwarsXP/config.yml");
+			config = YamlConfiguration.loadConfiguration(file);
+		}
+
 		Message = config.getString("Message").replaceAll("&", "§")
 				.replaceAll("§§", "&");
 		Add_Res_Shop = config.getBoolean("Add_Res_Shop");
@@ -87,38 +92,49 @@ public class Config {
 			ldcr.BedwarsXP.Main
 					.sendConsoleMessage("§6§l[BedwarsXP] &a完全经验起床模式已启动");
 		}
+		ldcr.BedwarsXP.Main.sendConsoleMessage("§6§l[BedwarsXP] &a开始加载资源价值数据");
 		if (Main.isOldBedwarsPlugin) {
-			Bedwars_Brick_Type = io.github.yannici.bedwars.Game.RessourceSpawner
-					.createSpawnerStackByConfig(
-							io.github.yannici.bedwars.Main.getInstance()
-									.getConfig().get("ressource.bronze"))
-					.getType();
-			Bedwars_Iron_Type = io.github.yannici.bedwars.Game.RessourceSpawner
-					.createSpawnerStackByConfig(
-							io.github.yannici.bedwars.Main.getInstance()
-									.getConfig().get("ressource.iron"))
-					.getType();
-			Bedwars_Gold_Type = io.github.yannici.bedwars.Game.RessourceSpawner
-					.createSpawnerStackByConfig(
-							io.github.yannici.bedwars.Main.getInstance()
-									.getConfig().get("ressource.gold"))
-					.getType();
+			for (final String key : io.github.yannici.bedwars.Main
+					.getInstance().getConfig()
+					.getConfigurationSection("ressource").getKeys(true)) {
+				final ConfigurationSection keySection = io.github.yannici.bedwars.Main
+						.getInstance().getConfig()
+						.getConfigurationSection("ressource." + key);
+				if (keySection == null) {
+					continue;
+				}
+				if (!keySection.contains("item")) {
+					continue;
+				}
+				final Material mat = io.github.yannici.bedwars.Utils
+						.parseMaterial(keySection.getString("item"));
+				int xp = config.getInt("XP." + key, 0);
+				res.put(mat, xp);
+				ldcr.BedwarsXP.Main
+						.sendConsoleMessage("§6§l[BedwarsXP] &a发现资源 [" + key
+								+ "] 物品:" + mat.toString() + " 价值" + xp);
+			}
 		} else {
-			Bedwars_Brick_Type = io.github.bedwarsrel.BedwarsRel.Game.RessourceSpawner
-					.createSpawnerStackByConfig(
-							io.github.bedwarsrel.BedwarsRel.Main.getInstance()
-									.getConfig().get("ressource.bronze"))
-					.getType();
-			Bedwars_Iron_Type = io.github.bedwarsrel.BedwarsRel.Game.RessourceSpawner
-					.createSpawnerStackByConfig(
-							io.github.bedwarsrel.BedwarsRel.Main.getInstance()
-									.getConfig().get("ressource.iron"))
-					.getType();
-			Bedwars_Gold_Type = io.github.bedwarsrel.BedwarsRel.Game.RessourceSpawner
-					.createSpawnerStackByConfig(
-							io.github.bedwarsrel.BedwarsRel.Main.getInstance()
-									.getConfig().get("ressource.gold"))
-					.getType();
+			for (final String key : io.github.bedwarsrel.BedwarsRel.Main
+					.getInstance().getConfig()
+					.getConfigurationSection("ressource").getKeys(true)) {
+				final ConfigurationSection keySection = io.github.bedwarsrel.BedwarsRel.Main
+						.getInstance().getConfig()
+						.getConfigurationSection("ressource." + key);
+				if (keySection == null) {
+					continue;
+				}
+				if (!keySection.contains("item")) {
+					continue;
+				}
+				final Material mat = io.github.bedwarsrel.BedwarsRel.Utils.Utils
+						.parseMaterial(keySection.getString("item"));
+				int xp = config.getInt("XP." + key, 0);
+				res.put(mat, xp);
+				ldcr.BedwarsXP.Main
+						.sendConsoleMessage("§6§l[BedwarsXP] &a发现资源 [" + key
+								+ "] 物品:" + mat.toString() + " 价值" + xp);
+			}
 		}
 		e_file = new File("plugins/BedwarsXP/enabledGames.yml");
 		if (!e_file.exists()) {

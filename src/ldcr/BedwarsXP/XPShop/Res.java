@@ -32,12 +32,8 @@ public class Res {
 			return 0;
 		}
 		int count = 0;
-		if (stack.getType().equals(Config.Bedwars_Brick_Type)) {
-			count = Config.XP_Brick * stack.getAmount();
-		} else if (stack.getType().equals(Config.Bedwars_Iron_Type)) {
-			count = Config.XP_Iron * stack.getAmount();
-		} else if (stack.getType().equals(Config.Bedwars_Gold_Type)) {
-			count = Config.XP_Gold * stack.getAmount();
+		if (Config.res.containsKey(stack.getType())) {
+			count = Config.res.get(stack.getType()) * stack.getAmount();
 		}
 		return count;
 	}
