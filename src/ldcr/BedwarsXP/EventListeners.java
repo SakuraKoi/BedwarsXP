@@ -87,9 +87,9 @@ public class EventListeners implements Listener {
 
 	@EventHandler
 	public void onAnvilOpen(final InventoryOpenEvent e) {
-		if (e.getPlayer().equals(null))
+		if (e.getPlayer() == null)
 			return;
-		if (e.getInventory().equals(null))
+		if (e.getInventory() == null)
 			return;
 		final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer((Player) e.getPlayer());
 		if (bw == null)
@@ -132,7 +132,7 @@ public class EventListeners implements Listener {
 		if (Config.deathDrop > 0) {
 			if (dropped < 1)
 				return;
-			final ItemStack dropStack = new ItemStack(Material.EXP_BOTTLE, 1);
+			final ItemStack dropStack = new ItemStack(Material.EXP_BOTTLE, 32);
 			final ItemMeta meta = dropStack.getItemMeta();
 			meta.setDisplayName("§b§l&BedwarsXP_DropedXP");
 			meta.setLore(Arrays.asList(String.valueOf(dropped)));
