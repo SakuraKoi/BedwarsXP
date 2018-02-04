@@ -132,7 +132,7 @@ public class EventListeners implements Listener {
 		if (Config.deathDrop > 0) {
 			if (dropped < 1)
 				return;
-			final ItemStack dropStack = new ItemStack(Material.EXP_BOTTLE, 32);
+			final ItemStack dropStack = new ItemStack(Material.EXP_BOTTLE, 16);
 			final ItemMeta meta = dropStack.getItemMeta();
 			meta.setDisplayName("§b§l&BedwarsXP_DropedXP");
 			meta.setLore(Arrays.asList(String.valueOf(dropped)));
