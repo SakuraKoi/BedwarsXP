@@ -1,13 +1,17 @@
 name: BedwarsXP
-main: ldcr.BedwarsXP.Main
-version: 1.6
+main: ldcr.BedwarsXP.BedwarsXP
+version: 1.7
 author: Ldcr
 depend: [BedwarsRel]
 commands:
   bedwarsxp:
-    description: 经验起床-重载配置
+    description: 经验起床
     usage: /bedwarsxp
     aliases: [bwxp]
+  bedwarsxpedit:
+    description: 修改玩家经验值
+    usage: /bedwarsxpedit
+    aliases: [editxp]
 permissions:
   bedwarsxp.admin:
     description: 经验起床相关管理权限.

@@ -2,167 +2,122 @@ package ldcr.BedwarsXP;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import ldcr.BedwarsXP.Utils.ListUtils;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+
+import ldcr.BedwarsXP.Utils.ListUtils;
 
 public class Config {
-	private static int ConfigVersion = 1;
-	static YamlConfiguration config;
-	static File file;
+	private static int configVersion = 2;
+	protected static YamlConfiguration yaml_config;
+	protected static File file_config;
 
-	static YamlConfiguration enable;
-	static File e_file;
+	protected static YamlConfiguration yaml_enabledGames;
+	protected static File file_enabledGames;
 
-	public static String Message;
-	public static boolean Add_Res_Shop;
+	public static String xpMessage;
+	public static boolean addResShop;
 
-	public static double Death;
-	public static boolean isDirect;
+	public static double deathCost;
+	public static double deathDrop;
 
-	public static boolean Full_XP_Bedwars;
-	public static HashMap<Material, Integer> res = new HashMap<Material, Integer>();
+	public static int maxXP;
+	public static String maxXPMessage;
 
-	private static HashSet<String> enabled = new HashSet<String>();
+	public static boolean fullXPBedwars;
+	public static HashMap<Material, Integer> resources = new HashMap<Material, Integer>();
+	public static HashSet<String> resourceskey = new HashSet<String>();
+
+	private static HashSet<String> enabledGameList = new HashSet<String>();
 
 	public static void loadConfig() {
-		ldcr.BedwarsXP.Main.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &b¿ªÊ¼¼ÓÔØÅäÖÃÎÄ¼ş");
-		file = new File("plugins/BedwarsXP/config.yml");
-		if (!file.exists()) {
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &bÅäÖÃÎÄ¼ş²»´æÔÚ,ÕıÔÚ´´½¨...");
-			ldcr.BedwarsXP.Main.plugin.saveResource("config.yml", true);
+		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &bå¼€å§‹åŠ è½½é…ç½®æ–‡ä»¶");
+		file_config = new File("plugins/BedwarsXP/config.yml");
+		if (!file_config.exists()) {
+			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &bé…ç½®æ–‡ä»¶ä¸å­˜åœ¨,æ­£åœ¨åˆ›å»º...");
+			ldcr.BedwarsXP.BedwarsXP.plugin.saveResource("config.yml", true);
 		}
-		config = YamlConfiguration.loadConfiguration(file);
-	
-		if (config.getInt("ConfigVersion") < ConfigVersion) {
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &4ÄúµÄÅäÖÃÎÄ¼ş°æ±¾¹ıÀÏÎŞ·¨¼ÓÔØ");
-			file.renameTo(new File("plugins/BedwarsXP/config.yml.bak"));
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &cÒÑ±¸·İÄúµÄÅäÖÃÎÄ¼şÎª [config.yml.bak] ,¿ªÊ¼³õÊ¼»¯ĞÂ°æ±¾ÅäÖÃÎÄ¼ş");
-			ldcr.BedwarsXP.Main.plugin.saveResource("config.yml", true);
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &aÅäÖÃÎÄ¼ş³õÊ¼»¯Íê³É,¼ÌĞø¼ÓÔØÅäÖÃ...");
-			file = new File("plugins/BedwarsXP/config.yml");
-			config = YamlConfiguration.loadConfiguration(file);
+		yaml_config = YamlConfiguration.loadConfiguration(file_config);
+
+		if (yaml_config.getInt("ConfigVersion") < configVersion) {
+			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &4æ‚¨çš„é…ç½®æ–‡ä»¶ç‰ˆæœ¬è¿‡è€æ— æ³•åŠ è½½");
+			file_config.renameTo(new File("plugins/BedwarsXP/config.bak.yml"));
+			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &cå·²å¤‡ä»½æ‚¨çš„é…ç½®æ–‡ä»¶ä¸º [config.bak.yml] ,å¼€å§‹åˆå§‹åŒ–æ–°ç‰ˆæœ¬é…ç½®æ–‡ä»¶");
+			ldcr.BedwarsXP.BedwarsXP.plugin.saveResource("config.yml", true);
+			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aé…ç½®æ–‡ä»¶åˆå§‹åŒ–å®Œæˆ,ç»§ç»­åŠ è½½é…ç½®...");
+			file_config = new File("plugins/BedwarsXP/config.yml");
+			yaml_config = YamlConfiguration.loadConfiguration(file_config);
 		}
 
-		Message = config.getString("Message").replaceAll("&", "¡ì")
-				.replaceAll("¡ì¡ì", "&");
-		Add_Res_Shop = config.getBoolean("Add_Res_Shop");
-		if (Add_Res_Shop) {
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &aÒÑÆôÓÃ¾­Ñé¶Ò»»×ÊÔ´ÉÌµê");
+		xpMessage = yaml_config.getString("Message").replaceAll("&", "Â§").replaceAll("Â§Â§", "&");
+		addResShop = yaml_config.getBoolean("Add_Res_Shop");
+		if (addResShop) {
+			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aå·²å¯ç”¨ç»éªŒå…‘æ¢èµ„æºå•†åº—");
 		}
-		String temp = config.getString("Death");
-		if (temp.endsWith("%")) {
-			NumberFormat nf = NumberFormat.getPercentInstance();
-			try {
-				Death = nf.parse(temp).doubleValue();
-				isDirect = false;
-			} catch (ParseException e) {
-				ldcr.BedwarsXP.Main
-						.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &cÄãµÄËÀÍö¾­Ñé¿Û³ıÅäÖÃÓĞ´íÎó,´Ë¹¦ÄÜ¹Ø±Õ");
-				Death = 0;
-				isDirect = true;
-				e.printStackTrace();
-			}
-		} else {
-			Death = Integer.valueOf(temp);
-			isDirect = true;
+
+		deathCost = yaml_config.getInt("DeathCostXP", 0) / 100.0;
+		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aæ­»äº¡æ‰£é™¤ " + (deathCost * 100) + "% ç»éªŒ");
+
+		deathDrop = yaml_config.getInt("DeathDropXP", 0) / 100.0;
+		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aæ­»äº¡æ‰è½ç»éªŒ" + (deathDrop == 0 ? "å·²å…³é—­" : ("å æ‰£é™¤ç»éªŒ " + (deathDrop * 100) + "%")));
+
+		maxXP = yaml_config.getInt("MaxXP");
+		maxXPMessage = yaml_config.getString("MaxXPMessage").replaceAll("&", "Â§").replaceAll("Â§Â§", "&");
+		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aæœ€å¤§ç»éªŒé™åˆ¶å·²" + (maxXP == 0 ? " å…³é—­" : "è®¾ç½®ä¸º " + maxXP));
+
+		fullXPBedwars = yaml_config.getBoolean("Full_XP_Bedwars");
+		if (fullXPBedwars) {
+			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aå®Œå…¨ç»éªŒèµ·åºŠæ¨¡å¼å·²å¯åŠ¨");
 		}
-		if (isDirect) {
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &aËÀÍöÖ±½Ó¿Û³ı¾­Ñé: " + Death);
-		} else {
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &aËÀÍö°Ù·Ö±È¿Û³ı¾­Ñé: " + Death
-							* 100 + "%");
-		}
-		Full_XP_Bedwars = config.getBoolean("Full_XP_Bedwars");
-		if (Full_XP_Bedwars) {
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &aÍêÈ«¾­ÑéÆğ´²Ä£Ê½ÒÑÆô¶¯");
-		}
-		ldcr.BedwarsXP.Main.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &a¿ªÊ¼¼ÓÔØ×ÊÔ´¼ÛÖµÊı¾İ");
-		if (Main.isOldBedwarsPlugin) {
-			for (final String key : io.github.yannici.bedwars.Main
-					.getInstance().getConfig()
-					.getConfigurationSection("ressource").getKeys(true)) {
-				final ConfigurationSection keySection = io.github.yannici.bedwars.Main
-						.getInstance().getConfig()
-						.getConfigurationSection("ressource." + key);
-				if (keySection == null) {
-					continue;
-				}
-				if (!keySection.contains("item")) {
-					continue;
-				}
-				final Material mat = io.github.yannici.bedwars.Utils
-						.parseMaterial(keySection.getString("item"));
-				int xp = config.getInt("XP." + key, 0);
-				res.put(mat, xp);
-				ldcr.BedwarsXP.Main
-						.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &a·¢ÏÖ×ÊÔ´ [" + key
-								+ "] ÎïÆ·:" + mat.toString() + " ¼ÛÖµ" + xp);
-			}
-		} else {
-			for (final String key : io.github.bedwarsrel.BedwarsRel.Main
-					.getInstance().getConfig()
-					.getConfigurationSection("ressource").getKeys(true)) {
-				final ConfigurationSection keySection = io.github.bedwarsrel.BedwarsRel.Main
-						.getInstance().getConfig()
-						.getConfigurationSection("ressource." + key);
-				if (keySection == null) {
-					continue;
-				}
-				if (!keySection.contains("item")) {
-					continue;
-				}
-				final Material mat = io.github.bedwarsrel.BedwarsRel.Utils.Utils
-						.parseMaterial(keySection.getString("item"));
-				int xp = config.getInt("XP." + key, 0);
-				res.put(mat, xp);
-				ldcr.BedwarsXP.Main
-						.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &a·¢ÏÖ×ÊÔ´ [" + key
-								+ "] ÎïÆ·:" + mat.toString() + " ¼ÛÖµ" + xp);
+
+		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aå¼€å§‹åŠ è½½èµ„æºä»·å€¼æ•°æ®");
+		final ConfigurationSection resourceSection = io.github.bedwarsrel.BedwarsRel.getInstance().getConfig().getConfigurationSection("resource");
+		for (final String key : resourceSection.getKeys(false)) {
+			@SuppressWarnings("unchecked")
+			final List<Map<String, Object>> resourceList = (List<Map<String, Object>>) io.github.bedwarsrel.BedwarsRel.getInstance().getConfig().getList("resource." + key + ".item");
+			for (final Map<String, Object> resource : resourceList) {
+				final ItemStack itemStack = ItemStack.deserialize(resource);
+				final Material mat = itemStack.getType();
+				final int xp = yaml_config.getInt("XP." + key, 0);
+				resources.put(mat, xp);
+				resourceskey.add(key);
+				BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &aå‘ç°èµ„æº [" + key + "] ç‰©å“:" + mat.toString() + " ä»·å€¼" + xp);
 			}
 		}
-		e_file = new File("plugins/BedwarsXP/enabledGames.yml");
-		if (!e_file.exists()) {
-			ldcr.BedwarsXP.Main
-					.sendConsoleMessage("¡ì6¡ìl[BedwarsXP] &c×¢Òâ,ÔÚĞÂ°æ±¾ÖĞÄãĞèÒªÊÖ¶¯Ê¹ÓÃ/bwxp enableÀ´ÆôÓÃÓÎÏ·µÄ¾­ÑéÆğ´²Ä£Ê½");
-			ldcr.BedwarsXP.Main.plugin.saveResource("enabledGames.yml", true);
+
+		file_enabledGames = new File("plugins/BedwarsXP/enabledGames.yml");
+		if (!file_enabledGames.exists()) {
+			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("Â§6Â§l[BedwarsXP] &cæ³¨æ„,åœ¨æ–°ç‰ˆæœ¬ä¸­ä½ éœ€è¦æ‰‹åŠ¨ä½¿ç”¨/bwxp enableæ¥å¯ç”¨æ¸¸æˆçš„ç»éªŒèµ·åºŠæ¨¡å¼");
+			ldcr.BedwarsXP.BedwarsXP.plugin.saveResource("enabledGames.yml", true);
 		}
-		enable = YamlConfiguration.loadConfiguration(e_file);
-		enabled.addAll(enable.getStringList("enabledGame"));
+		yaml_enabledGames = YamlConfiguration.loadConfiguration(file_enabledGames);
+		enabledGameList.addAll(yaml_enabledGames.getStringList("enabledGame"));
 	}
 
-	public static String setGameEnableXP(String bw, boolean isEnabled) {
+	public static String setGameEnableXP(final String bw, final boolean isEnabled) {
 		if (isEnabled) {
-			enabled.add(bw);
+			enabledGameList.add(bw);
 		} else {
-			enabled.remove(bw);
+			enabledGameList.remove(bw);
 		}
-		enable.set("enabledGame", ListUtils.hashSetToList(enabled));
+		yaml_enabledGames.set("enabledGame", ListUtils.hashSetToList(enabledGameList));
 		try {
-			enable.save(e_file);
-		} catch (IOException e) {
+			yaml_enabledGames.save(file_enabledGames);
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return e.getLocalizedMessage();
 		}
 		return "";
 	}
 
-	public static boolean isGameEnabledXP(String bw) {
-		return enabled.contains(bw);
+	public static boolean isGameEnabledXP(final String bw) {
+		return enabledGameList.contains(bw);
 	}
 }
