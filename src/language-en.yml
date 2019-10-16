@@ -1,0 +1,76 @@
+# Wanna English? Just overwrites language.yml with this file :)
+
+# You should replace single quote(') with two single quote('')
+# eg: player's -> player''s
+
+# Loading configuration
+LOADING_CONFIGURATION: 'Loading configuration...'
+CONFIGURATION_FILE_NOT_EXISTS: 'Configuration file not exists, create it...'
+OLD_VERSION_CONFIGURATION: 'Your configuration is outdated and cannot be load!'
+OLD_CONFIGURATION_BACKUPED: 'Your configuration has been renamed to [config.bak.yml], creating new one...'
+NEW_CONFIGURATION_SAVED: 'New configuration is created, continue...'
+
+RESOURCE_SHOP_ENABLED: 'Enabled XP-Resource shop'
+DEATH_COST_XP_PERCENT: 'Death will take %percent%% XP'
+DEATH_DROP_XP_DISABLED: 'Disabled Death-drop-XP'
+DEATH_DROP_XP_PERCEMT: 'Death will drop %percent%% XP'
+MAX_XP_LIMIT_DISABLED: 'Disabled Max-XP-limit'
+MAX_XP_LIMIT_ENABLED: 'Max XP limit is %value%'
+ALL_TRADES_USE_XP_ENABLED: 'Enabled All-trade-use-XP'
+
+LOADING_RESOURCES_VALUE: 'Loading resource data...'
+FOUNDED_RESOURCE: 'Resource %resource% (%material%) = %value%XP'
+
+WARN_YOU_NEEDS_ENABLE_BEDWARSXP_MANULLY: 'You need to use [/bwxp enable] to enable XP mode for a game!'
+
+# Enabling plugin
+FINDING_BEDWARSREL: 'Finding BedwarsRel...'
+BEDWARSREL_NOT_SUPPORTED: 'Sorry, Your BedwarsRel is not supported!'
+PLEASE_UPDATE_BEDWARSREL: 'Please update your BedwarsRel.'
+BEDWARSREL_SUPPORTED: 'Supported BedwarsRel found!'
+BEDWARSREL_NOT_FOUND: 'BedwarsRel not found!'
+
+ERROR_OCCURED_WHILE_LOADING: 'An error occurred while loading BedwarsXP'
+REPORT_ISSUE_HERE: 'Report it at here'
+
+SUCCESSFULLY_LOADED: 'BedwarsXP has been successfully loaded!'
+REPORT_ISSUE_AND_SUGGESTION_HERE: 'BUG Report | Suggestions'
+
+# Commands
+YOU_DONT_HAVE_PERMISSION_TO_EXECUTE_THIS_COMMAND: 'You dont have permission to execute this command'
+UNEXCEPTED_EXCEPTION_CAUGHT: 'An unexcepted error caught while executing the command.'
+ERROR_OCCURED: 'Sorry, An error occurred.'
+
+# Main command
+HELP_MAIN_RELOAD: '/bwxp reload          Reload BedwarsXP'
+HELP_MAIN_ENABLE: '/bwxp enable  <map>   Enable XP mode'
+HELP_MAIN_DISABLE: '/bwxp disable <map>   Disable XP mode'
+
+SUCCESSFULLY_RELOADED: 'BedwarsXP reloaded~'
+RELOAD_GAME_RUNNING: 'Some map is running!'
+UPDATE_RUNNING_GAME: 'Updating running games...'
+
+ERROR_GAME_NOT_FOUND: 'Sorry, Map %game% cannot be found'
+GAME_XP_ENABLED: 'Enabled XP mode for map %game% !'
+GAME_XP_DISABLED: 'Disabled XP mode for map %game% !'
+GAME_IS_RUNNING_RESTART_REQUIRED: 'Map %game% is running, please restart it manually!'
+
+# Edit XP command
+HELP_EDITXP: '/editxp <set/add/take> <player> <xp> Modify a player''s XP'
+EDITXP_PLAYER_NOT_IN_GAME: 'Player %player% is not in game!'
+EDITXP_GAME_IS_NOT_XP_MODE: 'The map that %player% playing is not in XP mode!'
+EDITXP_XP_IS_NOT_A_NUMBER: 'The XP you typed is not a valid number!'
+EDITXP_XP_HAS_BEEN_SET_TO: 'Player %player%''s XP has been set to %xp%'
+
+# Shop replacer
+ERROR_OCCURED_REPLACE_SHOP: 'Failed to replace shop for map %game%'
+SUCCESSFULLY_REPLACED_SHOP: 'Successfully replaced shop for map %game%!'
+ERROR_OCCURED_WHILE_INITALIZING_XP_SHOP: 'An error occurred while initializing XP shop for map %game%'
+
+SHOP_XP_EXCHANGE_TITLE: '§6§lXP Shop'
+SHOP_XP_EXCHANGE_LORE: '§aBuy resource with XP'
+
+SHOP_TRADE_XP: '§a%xp% XP'
+
+# Others
+ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK: 'Unsupported server version, ActionBar may not works'

@@ -20,8 +20,8 @@ import io.github.bedwarsrel.shop.NewItemShop;
 import io.github.bedwarsrel.villager.MerchantCategory;
 import io.github.bedwarsrel.villager.MerchantCategoryComparator;
 import io.github.bedwarsrel.villager.VillagerTrade;
+import ldcr.BedwarsXP.BedwarsXP;
 import ldcr.BedwarsXP.Config;
-import ldcr.BedwarsXP.utils.ListUtils;
 import ldcr.BedwarsXP.utils.ReflectionUtils;
 
 public class ShopReplacer implements Runnable {
@@ -53,7 +53,7 @@ public class ShopReplacer implements Runnable {
 				try {
 					ReflectionUtils.setPrivateValue(m, "offers", n);
 				} catch (final Exception e1) {
-					s.sendMessage("§6§l[BedwarsXP] §c为地图 " + game.getName() + " 替换原始商店为经验商店失败");
+					s.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURED_REPLACE_SHOP", "%game%", game.getName()));
 					e1.printStackTrace();
 				}
 				map.put(en.getKey(), m);
@@ -71,7 +71,7 @@ public class ShopReplacer implements Runnable {
 					}
 				}
 			}
-			final MerchantCategory mc = new MerchantCategory("§6§l经验兑换资源", Material.EXP_BOTTLE, trades, ListUtils.newList("§a将你的经验兑换成物品"), 3, "bw.base");
+			final MerchantCategory mc = new MerchantCategory(BedwarsXP.l18n("SHOP_XP_EXCHANGE_TITLE"), Material.EXP_BOTTLE, trades, Collections.singletonList(BedwarsXP.l18n("SHOP_XP_EXCHANGE_LORE")), 3, "bw.base");
 			map.put(Material.EXP_BOTTLE, mc);
 		}
 		try {
@@ -84,9 +84,9 @@ public class ShopReplacer implements Runnable {
 				shops.put(pl, new XPItemShop(order, game));
 			}
 			ReflectionUtils.setPrivateValue(game, "newItemShops", shops);
-			s.sendMessage("§6§l[BedwarsXP] §b为地图 " + game.getName() + " 替换经验商店成功!");
+			s.sendMessage("§6§lBedwarsXP §7>> §b"+BedwarsXP.l18n("SUCCESSFULLY_REPLACED_SHOP", "%game%", game.getName()));
 		} catch (final Exception e) {
-			s.sendMessage("§6§l[BedwarsXP] §c为地图 " + game.getName() + " 初始化经验商店时出错");
+			s.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURED_WHILE_INITALIZING_XP_SHOP", "%game%", game.getName()));
 			e.printStackTrace();
 		}
 	}

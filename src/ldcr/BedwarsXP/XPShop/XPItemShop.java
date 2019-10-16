@@ -26,6 +26,7 @@ import io.github.bedwarsrel.utils.ChatWriter;
 import io.github.bedwarsrel.utils.Utils;
 import io.github.bedwarsrel.villager.MerchantCategory;
 import io.github.bedwarsrel.villager.VillagerTrade;
+import ldcr.BedwarsXP.BedwarsXP;
 import ldcr.BedwarsXP.api.XPManager;
 import ldcr.BedwarsXP.utils.SoundMachine;
 
@@ -237,7 +238,7 @@ public class XPItemShop extends NewItemShop {
 			lores = new ArrayList<>();
 		}
 		if (trade instanceof XPVillagerTrade) {
-			lores.add("§a" + ((XPVillagerTrade) trade).getXp() + " 经验");
+			lores.add(BedwarsXP.l18n("SHOP_TRADE_XP", "%xp%", String.valueOf(((XPVillagerTrade) trade).getXp())));
 		} else {
 			lores.add(ChatColor.WHITE + String.valueOf(item1.getAmount()) + " " + item1.getItemMeta().getDisplayName());
 			if (item2 != null) {

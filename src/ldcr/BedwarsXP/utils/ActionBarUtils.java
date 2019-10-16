@@ -26,7 +26,7 @@ public class ActionBarUtils {
 					useNewMethods = true;
 				}
 			} catch (final Exception e) {
-				BedwarsXP.sendConsoleMessage("§cERROR: 解析服务端版本失败, ActionBar提示可能出错");
+				BedwarsXP.sendConsoleMessage("§cERROR: "+BedwarsXP.l18n("ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK"));
 			}
 		}
 	}

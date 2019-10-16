@@ -1,0 +1,72 @@
+# Loading configuration
+
+LOADING_CONFIGURATION: '正在加载配置文件...'
+CONFIGURATION_FILE_NOT_EXISTS: '配置文件不存在, 正在创建...'
+OLD_VERSION_CONFIGURATION: '您的配置文件版本过老无法加载'
+OLD_CONFIGURATION_BACKUPED: '已备份您的配置文件为 [config.bak.yml] ,开始初始化新版本配置文件'
+NEW_CONFIGURATION_SAVED: '配置文件初始化完成, 继续加载配置...'
+
+RESOURCE_SHOP_ENABLED: '已启用经验兑换资源商店'
+DEATH_COST_XP_PERCENT: '死亡扣除 %percent%% 经验'
+DEATH_DROP_XP_DISABLED: '死亡掉落经验已关闭'
+DEATH_DROP_XP_PERCEMT: '死亡掉落经验占扣除经验 %percent%%'
+MAX_XP_LIMIT_DISABLED: '最大经验限制已关闭'
+MAX_XP_LIMIT_ENABLED: '最大经验限制设置为 %value%'
+ALL_TRADES_USE_XP_ENABLED: '完全经验起床模式已启动'
+
+LOADING_RESOURCES_VALUE: '开始加载资源价值数据'
+FOUNDED_RESOURCE: '发现资源 %resource% 物品:%material% 价值 %value%'
+
+WARN_YOU_NEEDS_ENABLE_BEDWARSXP_MANULLY: '注意,在新版本中你需要手动使用/bwxp enable来启用游戏的经验起床模式'
+
+# Enabling plugin
+FINDING_BEDWARSREL: '正在寻找BedwarsRel插件...'
+BEDWARSREL_NOT_SUPPORTED: '抱歉, BedwarsXP不再支持旧版BedwarsRel!'
+PLEASE_UPDATE_BEDWARSREL: '请更新你的BedwarsRel至1.3.6以上版本.'
+BEDWARSREL_SUPPORTED: '已发现受支持的BedwarsRel插件!'
+BEDWARSREL_NOT_FOUND: '没有找到支持的BedwarsRel! 你可能没有安装或使用了不受支持的版本!'
+
+ERROR_OCCURED_WHILE_LOADING: 'BedwarsXP加载出错'
+REPORT_ISSUE_HERE: '请前往此处反馈'
+
+SUCCESSFULLY_LOADED: '成功加载BedwarsXP经验起床插件'
+REPORT_ISSUE_AND_SUGGESTION_HERE: 'BUG反馈 | 提交建议'
+
+# Commands
+YOU_DONT_HAVE_PERMISSION_TO_EXECUTE_THIS_COMMAND: '你没有权限执行此命令'
+UNEXCEPTED_EXCEPTION_CAUGHT: '在执行您的命令时出现了异常错误'
+ERROR_OCCURED: '错误: 在执行您的操作时发生了错误'
+
+# Main command
+HELP_MAIN_RELOAD: '/bwxp reload          重载插件配置'
+HELP_MAIN_ENABLE: '/bwxp enable <游戏>   激活指定游戏的经验起床模式'
+HELP_MAIN_DISABLE: '/bwxp disable <游戏>  禁用指定游戏的经验起床模式'
+
+SUCCESSFULLY_RELOADED: '成功重载配置文件~'
+RELOAD_GAME_RUNNING: '当前有游戏正在运行'
+UPDATE_RUNNING_GAME: '开始更新运行中的游戏的经验商店'
+
+ERROR_GAME_NOT_FOUND: '错误: 找不到游戏 %game%'
+GAME_XP_ENABLED: '成功激活了游戏 %game% 的经验起床模式'
+GAME_XP_DISABLED: '成功禁用了游戏 %game% 的经验起床模式'
+GAME_IS_RUNNING_RESTART_REQUIRED: '游戏 %game% 正在运行,请手动重启游戏'
+
+# Edit XP command
+HELP_EDITXP: '/editxp <set/add/take> <玩家> <经验值> 设置其他玩家的经验值'
+EDITXP_PLAYER_NOT_IN_GAME: '玩家 %player% 不在游戏中!'
+EDITXP_GAME_IS_NOT_XP_MODE: '玩家 %player% 所在的游戏没有开启经验起床模式!'
+EDITXP_XP_IS_NOT_A_NUMBER: '输入经验值的不是一个有效数字!'
+EDITXP_XP_HAS_BEEN_SET_TO: '玩家 %player% 的经验值已被设置为 %xp%'
+
+# Shop replacer
+ERROR_OCCURED_REPLACE_SHOP: '为地图 %game% 替换原始商店为经验商店失败'
+SUCCESSFULLY_REPLACED_SHOP: '为地图 %game% 替换经验商店成功!'
+ERROR_OCCURED_WHILE_INITALIZING_XP_SHOP: '为地图 %game% 初始化经验商店时出错'
+
+SHOP_XP_EXCHANGE_TITLE: '§6§l经验兑换资源'
+SHOP_XP_EXCHANGE_LORE: '§a将你的经验兑换成物品'
+
+SHOP_TRADE_XP: '§a%xp% 经验'
+
+# Others
+ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK: '解析服务端版本失败, ActionBar提示可能出错'

@@ -1,5 +1,8 @@
 package ldcr.BedwarsXP;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,14 +23,14 @@ public class BedwarsXP extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		consoleSender = Bukkit.getConsoleSender();
-		sendConsoleMessage("§b正在加载BedwarsXP经验起床插件 Version." + getDescription().getVersion());
-		if (!detectBedwarsRelVersion()) {
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
 
 		try {
+			sendConsoleMessage("§bLoading BedwarsXP... Version." + getDescription().getVersion());
 			Config.loadConfig();
+			if (!detectBedwarsRelVersion()) {
+				Bukkit.getPluginManager().disablePlugin(this);
+				return;
+			}
 			ActionBarUtils.load();
 			Bukkit.getPluginManager().registerEvents(new EventListeners(), this);
 			getCommand("bedwarsxp").setExecutor(new BedwarsXPCommandListener());
@@ -36,36 +39,49 @@ public class BedwarsXP extends JavaPlugin {
 			sendConsoleMessage("§c§lERROR: §c-----------------------------------");
 			e.printStackTrace();
 			sendConsoleMessage("§c§lERROR: §c-----------------------------------");
-			sendConsoleMessage("§c§lERROR: §cBedwarsXP加载出错. ");
-			sendConsoleMessage("§c§lERROR: §e   ↓↓ << 请前往此处反馈 >> ↓↓  ");
+			sendConsoleMessage("§c§lERROR: §c"+l18n("ERROR_OCCURED_WHILE_LOADING"));
+			sendConsoleMessage("§c§lERROR: §e   ↓↓ << "+l18n("REPORT_ISSUE_HERE")+" >> ↓↓  ");
 			sendConsoleMessage("§c§lERROR: §c https://github.com/Ldcr993519867/BedwarsXP/issues/1");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		sendConsoleMessage("§b成功加载BedwarsXP经验起床插件 By.Ldcr");
-		sendConsoleMessage("§e   ↓↓ << BUG反馈 | 提交建议 >> ↓↓  ");
+		sendConsoleMessage("§b"+l18n("SUCCESSFULLY_LOADED")+" By.SakuraKooi");
+		sendConsoleMessage("§e   ↓↓ << "+l18n("REPORT_ISSUE_AND_SUGGESTION_HERE")+" >> ↓↓  ");
 		sendConsoleMessage("§c https://github.com/Ldcr993519867/BedwarsXP/issues/1");
 	}
 
 	private boolean detectBedwarsRelVersion() {
-		sendConsoleMessage("§a正在寻找BedwarsRel插件...");
+		sendConsoleMessage("§a"+l18n("FINDING_BEDWARSREL"));
 		if (ReflectionUtils.isClassFound("io.github.yannici.bedwars.Main")) {
-			sendConsoleMessage("§c抱歉, BedwarsXP不再支持旧版BedwarsRel!");
-			sendConsoleMessage("§c请更新你的BedwarsRel至1.3.6以上版本.");
+			sendConsoleMessage("§c"+l18n("BEDWARSREL_NOT_SUPPORTED"));
+			sendConsoleMessage("§c"+l18n("PLEASE_UPDATE_BEDWARSREL"));
 			return false;
 		} else if (ReflectionUtils.isClassFound("io.github.bedwarsrel.BedwarsRel.Main")) {
-			sendConsoleMessage("§c抱歉, BedwarsXP不再支持旧版BedwarsRel!");
-			sendConsoleMessage("§c请更新你的BedwarsRel至1.3.6以上版本.");
+			sendConsoleMessage("§c"+l18n("BEDWARSREL_NOT_SUPPORTED"));
+			sendConsoleMessage("§c"+l18n("PLEASE_UPDATE_BEDWARSREL"));
 			return false;
 		} else if (ReflectionUtils.isClassFound("io.github.bedwarsrel.BedwarsRel")) {
-			sendConsoleMessage("§a已发现受支持的BedwarsRel插件!");
+			sendConsoleMessage("§a"+l18n("BEDWARSREL_SUPPORTED"));
 			return true;
 		} else {
-			sendConsoleMessage("§c§lERROR: §c没有找到支持的BedwarsRel! 你可能没有安装或使用了不受支持的版本!");
+			sendConsoleMessage("§c§lERROR: §c"+l18n("BEDWARSREL_NOT_FOUND"));
 			return false;
 		}
 	}
-
+	@Getter private static final Map<String, String> l18nCache = new HashMap<>();
+	public static String l18n(final String key, final String... replacement) {
+		String message;
+		if (l18nCache.containsKey(key)) {
+			message = l18nCache.get(key);
+		} else {
+			message = Config.getLanguageYaml().getString(key, "LANG_NOT_FOUND_"+key);
+			l18nCache.put(key, message);
+		}
+		for (int i = 0, length = replacement.length/2; i < length; i++) {
+			message = message.replace(replacement[i*2], replacement[i*2+1]);
+		}
+		return message;
+	}
 	public static void sendConsoleMessage(final String str) {
 		consoleSender.sendMessage("§6§lBedwarsXP §7>> " + str);
 	}

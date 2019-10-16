@@ -14,14 +14,17 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import ldcr.BedwarsXP.utils.ListUtils;
+import ldcr.BedwarsXP.utils.YamlUtils;
+import lombok.Getter;
 
 public class Config {
 	private static int configVersion = 2;
-	protected static YamlConfiguration yaml_config;
-	protected static File file_config;
+	protected static YamlConfiguration configYaml;
 
-	protected static YamlConfiguration yaml_enabledGames;
-	protected static File file_enabledGames;
+	protected static YamlConfiguration enabledGamesYaml;
+	protected static File enabledGamesFile;
+
+	@Getter private static YamlConfiguration languageYaml;
 
 	public static String xpMessage;
 	public static boolean addResShop;
@@ -39,49 +42,63 @@ public class Config {
 	private static Set<String> enabledGameList = new HashSet<>();
 
 	public static void loadConfig() {
-		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b开始加载配置文件");
-		file_config = new File("plugins/BedwarsXP/config.yml");
-		if (!file_config.exists()) {
-			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b配置文件不存在,正在创建...");
-			ldcr.BedwarsXP.BedwarsXP.getInstance().saveResource("config.yml", true);
+		BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b正在加载语音文件... | Loading language configuration...");
+		final File languageFile = new File("plugins/BedwarsXP/language.yml");
+		if (!languageFile.exists()) {
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b语言文件不存在,正在创建...");
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §bWanna english? Just overwrites language.yml with language-en.yml :)");
+			BedwarsXP.getInstance().saveResource("language.yml", true);
+			BedwarsXP.getInstance().saveResource("language-en.yml", true);
 		}
-		yaml_config = YamlConfiguration.loadConfiguration(file_config);
+		try {
+			languageYaml = YamlUtils.loadYamlUTF8(languageFile);
+		} catch (final IOException e) {
+			languageYaml = new YamlConfiguration();
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §c语言文件加载失败 | Failed to load language");
+			e.printStackTrace();
+		}
+		BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b"+BedwarsXP.l18n("LOADING_CONFIGURATION"));
+		File  configFile = new File("plugins/BedwarsXP/config.yml");
+		if (!configFile.exists()) {
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b"+BedwarsXP.l18n("CONFIGURATION_FILE_NOT_EXISTS"));
+			BedwarsXP.getInstance().saveResource("config.yml", true);
+		}
+		configYaml = YamlConfiguration.loadConfiguration(configFile);
 
-		if (yaml_config.getInt("ConfigVersion") < configVersion) {
-			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §4您的配置文件版本过老无法加载");
-			file_config.renameTo(new File("plugins/BedwarsXP/config.bak.yml"));
-			ldcr.BedwarsXP.BedwarsXP
-			.sendConsoleMessage("§6§lBedwarsXP §7>> §c已备份您的配置文件为 [config.bak.yml] ,开始初始化新版本配置文件");
-			ldcr.BedwarsXP.BedwarsXP.getInstance().saveResource("config.yml", true);
-			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a配置文件初始化完成,继续加载配置...");
-			file_config = new File("plugins/BedwarsXP/config.yml");
-			yaml_config = YamlConfiguration.loadConfiguration(file_config);
+		if (configYaml.getInt("ConfigVersion") < configVersion) {
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §4"+BedwarsXP.l18n("OLD_VERSION_CONFIGURATION"));
+			configFile.renameTo(new File("plugins/BedwarsXP/config.bak.yml"));
+			BedwarsXP
+			.sendConsoleMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("OLD_CONFIGURATION_BACKUPED"));
+			BedwarsXP.getInstance().saveResource("config.yml", true);
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("NEW_CONFIGURATION_SAVED"));
+			configFile = new File("plugins/BedwarsXP/config.yml");
+			configYaml = YamlConfiguration.loadConfiguration(configFile);
 		}
 
-		xpMessage = yaml_config.getString("Message").replaceAll("&", "§").replaceAll("§§", "§");
-		addResShop = yaml_config.getBoolean("Add_Res_Shop");
+		xpMessage = configYaml.getString("Message").replaceAll("&", "§").replaceAll("§§", "§");
+		addResShop = configYaml.getBoolean("Add_Res_Shop");
 		if (addResShop) {
-			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a已启用经验兑换资源商店");
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("RESOURCE_SHOP_ENABLED"));
 		}
 
-		deathCost = yaml_config.getInt("DeathCostXP", 0) / 100.0;
-		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a死亡扣除 " + deathCost * 100 + "% 经验");
+		deathCost = configYaml.getInt("DeathCostXP", 0) / 100.0;
+		BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("DEATH_COST_XP_PERCENT", "%percent%", String.valueOf(deathCost * 100)));
 
-		deathDrop = yaml_config.getInt("DeathDropXP", 0) / 100.0;
-		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage(
-				"§6§lBedwarsXP §7>> §a死亡掉落经验" + (deathDrop == 0 ? "已关闭" : "占扣除经验 " + deathDrop * 100 + "%"));
+		deathDrop = configYaml.getInt("DeathDropXP", 0) / 100.0;
+		BedwarsXP.sendConsoleMessage(
+				"§6§lBedwarsXP §7>> §a" + (deathDrop == 0 ? BedwarsXP.l18n("DEATH_DROP_XP_DISABLED") : BedwarsXP.l18n("DEATH_DROP_XP_PERCEMT", "%percent%", String.valueOf(deathDrop * 100))));
 
-		maxXP = yaml_config.getInt("MaxXP");
-		maxXPMessage = yaml_config.getString("MaxXPMessage").replaceAll("&", "§").replaceAll("§§", "§");
-		ldcr.BedwarsXP.BedwarsXP
-		.sendConsoleMessage("§6§lBedwarsXP §7>> §a最大经验限制已" + (maxXP == 0 ? " 关闭" : "设置为 " + maxXP));
+		maxXP = configYaml.getInt("MaxXP");
+		maxXPMessage = configYaml.getString("MaxXPMessage").replaceAll("&", "§").replaceAll("§§", "§");
+		BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a" + (maxXP == 0 ? BedwarsXP.l18n("MAX_XP_LIMIT_DISABLED") : BedwarsXP.l18n("MAX_XP_LIMIT_ENABLED", "%value%", String.valueOf(maxXP))));
 
-		fullXPBedwars = yaml_config.getBoolean("Full_XP_Bedwars");
+		fullXPBedwars = configYaml.getBoolean("Full_XP_Bedwars");
 		if (fullXPBedwars) {
-			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a完全经验起床模式已启动");
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("ALL_TRADES_USE_XP_ENABLED"));
 		}
 
-		ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a开始加载资源价值数据");
+		BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("LOADING_RESOURCES_VALUE"));
 		final ConfigurationSection resourceSection = io.github.bedwarsrel.BedwarsRel.getInstance().getConfig()
 				.getConfigurationSection("resource");
 		for (final String key : resourceSection.getKeys(false)) {
@@ -91,21 +108,21 @@ public class Config {
 			for (final Map<String, Object> resource : resourceList) {
 				final ItemStack itemStack = ItemStack.deserialize(resource);
 				final Material mat = itemStack.getType();
-				final int xp = yaml_config.getInt("XP." + key, 0);
+				final int xp = configYaml.getInt("XP." + key, 0);
 				resources.put(mat, xp);
 				resourceskey.add(key);
 				BedwarsXP.sendConsoleMessage(
-						"§6§lBedwarsXP §7>> §a发现资源 [" + key + "] 物品:" + mat.toString() + " 价值" + xp);
+						"§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("FOUNDED_RESOURCE", "%resource%", key, "%material%", mat.toString(), "%value%", String.valueOf(xp)));
 			}
 		}
 
-		file_enabledGames = new File("plugins/BedwarsXP/enabledGames.yml");
-		if (!file_enabledGames.exists()) {
-			ldcr.BedwarsXP.BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §c注意,在新版本中你需要手动使用/bwxp enable来启用游戏的经验起床模式");
-			ldcr.BedwarsXP.BedwarsXP.getInstance().saveResource("enabledGames.yml", true);
+		enabledGamesFile = new File("plugins/BedwarsXP/enabledGames.yml");
+		if (!enabledGamesFile.exists()) {
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("WARN_YOU_NEEDS_ENABLE_BEDWARSXP_MANULLY"));
+			BedwarsXP.getInstance().saveResource("enabledGames.yml", true);
 		}
-		yaml_enabledGames = YamlConfiguration.loadConfiguration(file_enabledGames);
-		enabledGameList.addAll(yaml_enabledGames.getStringList("enabledGame"));
+		enabledGamesYaml = YamlConfiguration.loadConfiguration(enabledGamesFile);
+		enabledGameList.addAll(enabledGamesYaml.getStringList("enabledGame"));
 	}
 
 	public static String setGameEnableXP(final String bw, final boolean isEnabled) {
@@ -114,9 +131,9 @@ public class Config {
 		} else {
 			enabledGameList.remove(bw);
 		}
-		yaml_enabledGames.set("enabledGame", ListUtils.setToList(enabledGameList));
+		enabledGamesYaml.set("enabledGame", ListUtils.setToList(enabledGameList));
 		try {
-			yaml_enabledGames.save(file_enabledGames);
+			enabledGamesYaml.save(enabledGamesFile);
 		} catch (final IOException e) {
 			e.printStackTrace();
 			return e.getLocalizedMessage();
