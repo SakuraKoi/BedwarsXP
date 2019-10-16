@@ -1,4 +1,4 @@
-package ldcr.BedwarsXP.Utils;
+package ldcr.BedwarsXP.utils;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import ldcr.BedwarsXP.XPShop.ShopReplacer;
 
 public class BedwarsGameUtils {
 	public static boolean isGameExists(final String bw) {
-		return !BedwarsRel.getInstance().getGameManager().getGame(bw).equals(null);
+		return BedwarsRel.getInstance().getGameManager().getGame(bw) != null;
 	}
 
 	public static boolean isGameRunning(final String bw) {

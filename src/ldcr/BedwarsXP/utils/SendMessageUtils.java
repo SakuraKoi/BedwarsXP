@@ -1,4 +1,4 @@
-package ldcr.BedwarsXP.Utils;
+package ldcr.BedwarsXP.utils;
 
 import org.bukkit.command.CommandSender;
 

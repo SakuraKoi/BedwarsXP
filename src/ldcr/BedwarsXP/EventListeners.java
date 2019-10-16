@@ -22,11 +22,11 @@ import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.events.BedwarsGameEndEvent;
 import io.github.bedwarsrel.events.BedwarsGameStartEvent;
 import io.github.bedwarsrel.game.Game;
-import ldcr.BedwarsXP.Utils.ResourceUtils;
-import ldcr.BedwarsXP.Utils.SoundMachine;
 import ldcr.BedwarsXP.XPShop.ShopReplacer;
 import ldcr.BedwarsXP.api.XPManager;
 import ldcr.BedwarsXP.api.events.BedwarsXPDeathDropXPEvent;
+import ldcr.BedwarsXP.utils.ResourceUtils;
+import ldcr.BedwarsXP.utils.SoundMachine;
 
 public class EventListeners implements Listener {
 	@EventHandler
@@ -50,22 +50,18 @@ public class EventListeners implements Listener {
 			return;
 		final XPManager xpman = XPManager.getXPManager(bw.getName());
 		// if current XP > maxXP -> deny pickup
-		if (Config.maxXP != 0) {
-			if (xpman.getXP(p) >= Config.maxXP) {
-				e.setCancelled(true);
-				entity.setPickupDelay(10);
-				xpman.sendMaxXPMessage(p);
-				return;
-			}
+		if (Config.maxXP != 0 && xpman.getXP(p) >= Config.maxXP) {
+			e.setCancelled(true);
+			entity.setPickupDelay(10);
+			xpman.sendMaxXPMessage(p);
+			return;
 		}
 		int added = xpman.getXP(p) + count;
 		int leftXP = 0;
 		// if after pickup XP>maxXP -> set XP = maxXP
-		if (Config.maxXP != 0) {
-			if (added > Config.maxXP) {
-				leftXP = added - Config.maxXP;
-				added = Config.maxXP;
-			}
+		if (Config.maxXP != 0 && added > Config.maxXP) {
+			leftXP = added - Config.maxXP;
+			added = Config.maxXP;
 		}
 		xpman.setXP(p, added);
 		p.playSound(p.getLocation(), SoundMachine.get("ORB_PICKUP", "ENTITY_EXPERIENCE_ORB_PICKUP"), 0.2F, 1.5F);
@@ -111,7 +107,7 @@ public class EventListeners implements Listener {
 		final XPManager xpman = XPManager.getXPManager(bw.getName());
 		final Player p = e.getEntity();
 		// 计算死亡扣除经验值
-		int costed = (int) (xpman.getXP(p) * (Config.deathCost));
+		int costed = (int) (xpman.getXP(p) * Config.deathCost);
 		// 计算死亡掉落经验值
 		int dropped = 0;
 		if (Config.deathDrop > 0) {
@@ -149,7 +145,7 @@ public class EventListeners implements Listener {
 			return;
 		if (!Config.isGameEnabledXP(e.getGame().getName()))
 			return;
-		ShopReplacer.replaceShop(e.getGame().getName(), BedwarsXP.log);
+		ShopReplacer.replaceShop(e.getGame().getName(), BedwarsXP.getConsoleSender());
 	}
 
 	@EventHandler
@@ -167,13 +163,8 @@ public class EventListeners implements Listener {
 		if (!Config.isGameEnabledXP(bw.getName()))
 			return;
 		final Player p = e.getPlayer();
-		Bukkit.getScheduler().runTaskLater(BedwarsXP.plugin, new Runnable() {
-
-			@Override
-			public void run() {
-				XPManager.getXPManager(bw.getName()).updateXPBar(p);
-			}
-		}, 5);
+		Bukkit.getScheduler().runTaskLater(BedwarsXP.getInstance(),
+				() -> XPManager.getXPManager(bw.getName()).updateXPBar(p), 5);
 
 	}
 

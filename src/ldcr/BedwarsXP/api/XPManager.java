@@ -1,23 +1,23 @@
 package ldcr.BedwarsXP.api;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
 import ldcr.BedwarsXP.Config;
-import ldcr.BedwarsXP.Utils.ActionBarUtils;
+import ldcr.BedwarsXP.utils.ActionBarUtils;
 
 public class XPManager {
-	private static HashMap<String, XPManager> managerMap = new HashMap<String, XPManager>();
-	private final HashMap<UUID, Integer> xp = new HashMap<UUID, Integer>();
+	private static Map<String, XPManager> managerMap = new HashMap<>();
+	private final Map<UUID, Integer> xp = new HashMap<>();
 
 	public static XPManager getXPManager(final String bedwarsGame) {
 		if (!managerMap.containsKey(bedwarsGame)) {
 			managerMap.put(bedwarsGame, new XPManager());
 		}
-		final XPManager manager = managerMap.get(bedwarsGame);
-		return manager;
+		return managerMap.get(bedwarsGame);
 	}
 
 	public static void reset(final String bedwarsGame) {
@@ -66,8 +66,8 @@ public class XPManager {
 		return get(player) >= count;
 	}
 
-	private final HashMap<UUID, Long> messageTimeMap = new HashMap<UUID, Long>();
-	private final HashMap<UUID, Integer> messageCountMap = new HashMap<UUID, Integer>();
+	private final HashMap<UUID, Long> messageTimeMap = new HashMap<>();
+	private final HashMap<UUID, Integer> messageCountMap = new HashMap<>();
 
 	public void sendXPMessage(final Player player, final int count) {
 		if (!messageTimeMap.containsKey(player.getUniqueId())) {
@@ -76,7 +76,7 @@ public class XPManager {
 		if (!messageCountMap.containsKey(player.getUniqueId())) {
 			messageCountMap.put(player.getUniqueId(), 0);
 		}
-		if ((System.currentTimeMillis() - messageTimeMap.get(player.getUniqueId())) > 500) {
+		if (System.currentTimeMillis() - messageTimeMap.get(player.getUniqueId()) > 500) {
 			messageCountMap.put(player.getUniqueId(), 0);
 		}
 		messageTimeMap.put(player.getUniqueId(), System.currentTimeMillis());

@@ -21,8 +21,8 @@ import io.github.bedwarsrel.villager.MerchantCategory;
 import io.github.bedwarsrel.villager.MerchantCategoryComparator;
 import io.github.bedwarsrel.villager.VillagerTrade;
 import ldcr.BedwarsXP.Config;
-import ldcr.BedwarsXP.Utils.ListUtils;
-import ldcr.BedwarsXP.Utils.ReflectionUtils;
+import ldcr.BedwarsXP.utils.ListUtils;
+import ldcr.BedwarsXP.utils.ReflectionUtils;
 
 public class ShopReplacer implements Runnable {
 	Game game;
@@ -31,7 +31,7 @@ public class ShopReplacer implements Runnable {
 	public static void replaceShop(final String bw, final CommandSender sender) {
 		if (!Config.isGameEnabledXP(bw))
 			return;
-		Bukkit.getScheduler().runTaskLater(ldcr.BedwarsXP.BedwarsXP.plugin, new ShopReplacer(bw, sender), 20);
+		Bukkit.getScheduler().runTaskLater(ldcr.BedwarsXP.BedwarsXP.getInstance(), new ShopReplacer(bw, sender), 20);
 	}
 
 	public ShopReplacer(final String e, final CommandSender sender) {
@@ -46,7 +46,7 @@ public class ShopReplacer implements Runnable {
 			for (final Entry<Material, MerchantCategory> en : map.entrySet()) {
 				final MerchantCategory m = en.getValue();
 				final ArrayList<VillagerTrade> t = m.getOffers();
-				final ArrayList<XPVillagerTrade> n = new ArrayList<XPVillagerTrade>();
+				final ArrayList<XPVillagerTrade> n = new ArrayList<>();
 				for (int i = 0; i < t.size(); i++) {
 					n.add(new XPVillagerTrade(t.get(i)));
 				}
@@ -60,7 +60,7 @@ public class ShopReplacer implements Runnable {
 			}
 		}
 		if (Config.addResShop) {
-			final ArrayList<VillagerTrade> trades = new ArrayList<VillagerTrade>();
+			final ArrayList<VillagerTrade> trades = new ArrayList<>();
 			for (final String key : Config.resourceskey) {
 				@SuppressWarnings("unchecked")
 				final List<Map<String, Object>> resourceList = (List<Map<String, Object>>) io.github.bedwarsrel.BedwarsRel.getInstance().getConfig().getList("resource." + key + ".item");
@@ -77,12 +77,11 @@ public class ShopReplacer implements Runnable {
 		try {
 			final Field itemshops = ReflectionUtils.getField(game, "newItemShops");
 			itemshops.setAccessible(true);
-			final HashMap<Player, NewItemShop> shops = new HashMap<Player, NewItemShop>();
-			final List<MerchantCategory> order = new ArrayList<MerchantCategory>(map.values());
+			final HashMap<Player, NewItemShop> shops = new HashMap<>();
+			final List<MerchantCategory> order = new ArrayList<>(map.values());
 			Collections.sort(order, new MerchantCategoryComparator());
 			for (final Player pl : game.getPlayers()) {
-				final XPItemShop Shop = new XPItemShop(order, game);
-				shops.put(pl, Shop);
+				shops.put(pl, new XPItemShop(order, game));
 			}
 			ReflectionUtils.setPrivateValue(game, "newItemShops", shops);
 			s.sendMessage("§6§l[BedwarsXP] §b为地图 " + game.getName() + " 替换经验商店成功!");
