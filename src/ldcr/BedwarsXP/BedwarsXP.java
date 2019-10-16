@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ldcr.BedwarsXP.command.BedwarsXPCommandListener;
 import ldcr.BedwarsXP.command.EditXPCommandListener;
 import ldcr.BedwarsXP.utils.ActionBarUtils;
+import ldcr.BedwarsXP.utils.MetricsLite;
 import ldcr.BedwarsXP.utils.ReflectionUtils;
 import lombok.Getter;
 
@@ -48,6 +49,9 @@ public class BedwarsXP extends JavaPlugin {
 		sendConsoleMessage("§b"+l18n("SUCCESSFULLY_LOADED")+" By.SakuraKooi");
 		sendConsoleMessage("§e   ↓↓ << "+l18n("REPORT_ISSUE_AND_SUGGESTION_HERE")+" >> ↓↓  ");
 		sendConsoleMessage("§c https://github.com/Ldcr993519867/BedwarsXP/issues/1");
+		try {
+			new MetricsLite(this);
+		} catch (final Exception e) {}
 	}
 
 	private boolean detectBedwarsRelVersion() {

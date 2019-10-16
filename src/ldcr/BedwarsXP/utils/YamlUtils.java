@@ -1,13 +1,3 @@
-/**
- * @Project BedwarsXP
- *
- * Copyright 2019 SakuraKooi. All right reserved.
- *
- * This is a private project. Distribution is not allowed.
- * You needs ask Ldcr for the permission to using it on your server.
- *
- * @Author SakuraKooi (sakurakoi993519867@gmail.com)
- */
 package ldcr.BedwarsXP.utils;
 
 import java.io.File;
