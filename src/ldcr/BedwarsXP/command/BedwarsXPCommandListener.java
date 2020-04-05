@@ -1,13 +1,12 @@
 package ldcr.BedwarsXP.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
 import ldcr.BedwarsXP.BedwarsXP;
 import ldcr.BedwarsXP.Config;
 import ldcr.BedwarsXP.utils.BedwarsGameUtils;
 import ldcr.BedwarsXP.utils.SendMessageUtils;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
 public class BedwarsXPCommandListener implements CommandExecutor {
 
@@ -61,7 +60,7 @@ public class BedwarsXPCommandListener implements CommandExecutor {
 						sender.sendMessage("§6§lBedwarsXP §7>> §4"+BedwarsXP.l18n("GAME_IS_RUNNING_RESTART_REQUIRED", "%game%", args[1]));
 					}
 				} else {
-					SendMessageUtils.sendMessage(sender, "§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURED"), "§6§lBedwarsXP §7>> §c" + result);
+					SendMessageUtils.sendMessage(sender, "§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURRED"), "§6§lBedwarsXP §7>> §c" + result);
 				}
 				return true;
 			}
@@ -81,7 +80,7 @@ public class BedwarsXPCommandListener implements CommandExecutor {
 						sender.sendMessage("§6§lBedwarsXP §7>> §4"+BedwarsXP.l18n("GAME_IS_RUNNING_RESTART_REQUIRED", "%game%", args[1]));
 					}
 				} else {
-					SendMessageUtils.sendMessage(sender, "§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURED"), "§6§lBedwarsXP §7>> §c" + result);
+					SendMessageUtils.sendMessage(sender, "§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURRED"), "§6§lBedwarsXP §7>> §c" + result);
 				}
 				return true;
 			}

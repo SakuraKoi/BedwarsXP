@@ -1,12 +1,15 @@
 package ldcr.BedwarsXP.XPShop;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
+import io.github.bedwarsrel.BedwarsRel;
+import io.github.bedwarsrel.game.Game;
+import io.github.bedwarsrel.shop.NewItemShop;
+import io.github.bedwarsrel.utils.ChatWriter;
+import io.github.bedwarsrel.utils.Utils;
+import io.github.bedwarsrel.villager.MerchantCategory;
+import io.github.bedwarsrel.villager.VillagerTrade;
+import ldcr.BedwarsXP.BedwarsXP;
+import ldcr.BedwarsXP.api.XPManager;
+import ldcr.BedwarsXP.utils.SoundMachine;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,16 +22,12 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
-import io.github.bedwarsrel.BedwarsRel;
-import io.github.bedwarsrel.game.Game;
-import io.github.bedwarsrel.shop.NewItemShop;
-import io.github.bedwarsrel.utils.ChatWriter;
-import io.github.bedwarsrel.utils.Utils;
-import io.github.bedwarsrel.villager.MerchantCategory;
-import io.github.bedwarsrel.villager.VillagerTrade;
-import ldcr.BedwarsXP.BedwarsXP;
-import ldcr.BedwarsXP.api.XPManager;
-import ldcr.BedwarsXP.utils.SoundMachine;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class XPItemShop extends NewItemShop {
 	private final Game bedwars;

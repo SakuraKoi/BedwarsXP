@@ -1,13 +1,12 @@
 package ldcr.BedwarsXP.api;
 
+import ldcr.BedwarsXP.Config;
+import ldcr.BedwarsXP.utils.ActionBarUtils;
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.bukkit.entity.Player;
-
-import ldcr.BedwarsXP.Config;
-import ldcr.BedwarsXP.utils.ActionBarUtils;
 
 public class XPManager {
 	private static Map<String, XPManager> managerMap = new HashMap<>();
@@ -21,7 +20,6 @@ public class XPManager {
 	}
 
 	public static void reset(final String bedwarsGame) {
-		getXPManager(bedwarsGame).xp.clear();
 		managerMap.remove(bedwarsGame);
 	}
 

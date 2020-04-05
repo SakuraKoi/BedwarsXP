@@ -1,8 +1,7 @@
 package ldcr.BedwarsXP.utils;
 
-import org.bukkit.inventory.ItemStack;
-
 import ldcr.BedwarsXP.Config;
+import org.bukkit.inventory.ItemStack;
 
 public class ResourceUtils {
 	public static int convertResToXP(final ItemStack stack) {

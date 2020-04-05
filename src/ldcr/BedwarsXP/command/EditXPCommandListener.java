@@ -1,18 +1,17 @@
 package ldcr.BedwarsXP.command;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import ldcr.BedwarsXP.BedwarsXP;
 import ldcr.BedwarsXP.Config;
 import ldcr.BedwarsXP.api.XPManager;
 import ldcr.BedwarsXP.utils.SendMessageUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class EditXPCommandListener implements CommandExecutor {
 

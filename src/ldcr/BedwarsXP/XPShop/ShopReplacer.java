@@ -1,19 +1,5 @@
 package ldcr.BedwarsXP.XPShop;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.shop.NewItemShop;
@@ -23,6 +9,15 @@ import io.github.bedwarsrel.villager.VillagerTrade;
 import ldcr.BedwarsXP.BedwarsXP;
 import ldcr.BedwarsXP.Config;
 import ldcr.BedwarsXP.utils.ReflectionUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class ShopReplacer implements Runnable {
 	Game game;
@@ -31,7 +26,7 @@ public class ShopReplacer implements Runnable {
 	public static void replaceShop(final String bw, final CommandSender sender) {
 		if (!Config.isGameEnabledXP(bw))
 			return;
-		Bukkit.getScheduler().runTaskLater(ldcr.BedwarsXP.BedwarsXP.getInstance(), new ShopReplacer(bw, sender), 20);
+		Bukkit.getScheduler().runTaskLater(BedwarsXP.getInstance(), new ShopReplacer(bw, sender), 20);
 	}
 
 	public ShopReplacer(final String e, final CommandSender sender) {
@@ -53,7 +48,7 @@ public class ShopReplacer implements Runnable {
 				try {
 					ReflectionUtils.setPrivateValue(m, "offers", n);
 				} catch (final Exception e1) {
-					s.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURED_REPLACE_SHOP", "%game%", game.getName()));
+					s.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURRED_REPLACE_SHOP", "%game%", game.getName()));
 					e1.printStackTrace();
 				}
 				map.put(en.getKey(), m);
@@ -86,7 +81,7 @@ public class ShopReplacer implements Runnable {
 			ReflectionUtils.setPrivateValue(game, "newItemShops", shops);
 			s.sendMessage("§6§lBedwarsXP §7>> §b"+BedwarsXP.l18n("SUCCESSFULLY_REPLACED_SHOP", "%game%", game.getName()));
 		} catch (final Exception e) {
-			s.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURED_WHILE_INITALIZING_XP_SHOP", "%game%", game.getName()));
+			s.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_OCCURRED_WHILE_INITALIZING_XP_SHOP", "%game%", game.getName()));
 			e.printStackTrace();
 		}
 	}
