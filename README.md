@@ -1,4 +1,5 @@
 # BedwarsXP
+![](https://img.shields.io/github/v/release/SakuraKoi/BedwarsXP?style=flat-square) ![](https://img.shields.io/github/downloads/SakuraKoi/BedwarsXP/total?style=flat-square) ![](https://img.shields.io/github/license/SakuraKoi/BedwarsXP?style=flat-square) ![](https://img.shields.io/bstats/players/3999?style=flat-square) ![](https://img.shields.io/bstats/servers/3999?style=flat-square)
 
 BedwarsXP - BedwarsRel addon (A Minecraft Server Plugin)
 
