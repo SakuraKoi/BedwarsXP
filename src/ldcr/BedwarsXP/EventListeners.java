@@ -1,23 +1,5 @@
 package ldcr.BedwarsXP;
 
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.events.BedwarsGameEndEvent;
 import io.github.bedwarsrel.events.BedwarsGameStartEvent;
@@ -27,58 +9,87 @@ import ldcr.BedwarsXP.api.XPManager;
 import ldcr.BedwarsXP.api.events.BedwarsXPDeathDropXPEvent;
 import ldcr.BedwarsXP.utils.ResourceUtils;
 import ldcr.BedwarsXP.utils.SoundMachine;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Collections;
 
 public class EventListeners implements Listener {
 	@EventHandler
 	public void onItemPickup(final PlayerPickupItemEvent e) {
-		final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(e.getPlayer());
-		if (bw == null)
-			return;
-		if (!Config.isGameEnabledXP(bw.getName()))
-			return;
-		final Player p = e.getPlayer();
+		Player p = e.getPlayer();
+		final Game bw = checkGame(p);
+		if (bw == null) return;
+
 		final Item entity = e.getItem();
 		final ItemStack stack = entity.getItemStack();
 
 		final int count;
-		if (stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals("§b§l&BedwarsXP_DropedXP")) {
+		if (stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals("§b§l&BedwarsXP_DroppedXP")) {
 			count = Integer.valueOf(stack.getItemMeta().getLore().get(0));
 		} else {
 			count = ResourceUtils.convertResToXP(stack);
 		}
-		if (count == 0)
-			return;
-		final XPManager xpman = XPManager.getXPManager(bw.getName());
-		// if current XP > maxXP -> deny pickup
-		if (Config.maxXP != 0 && xpman.getXP(p) >= Config.maxXP) {
+
+		if (pickupXP(bw, p, count)) {
+			e.setCancelled(true);
+			entity.remove();
+		} else {
 			e.setCancelled(true);
 			entity.setPickupDelay(10);
-			xpman.sendMaxXPMessage(p);
-			return;
 		}
-		int added = xpman.getXP(p) + count;
+	}
+
+	private boolean pickupXP(Game bw, Player player, int count) {
+		if (count <= 0) return true;
+
+		final XPManager xpman = XPManager.getXPManager(bw.getName());
+		// if current XP > maxXP -> deny pickup
+		if (Config.maxXP != 0 && xpman.getXP(player) >= Config.maxXP) {
+			xpman.sendMaxXPMessage(player);
+			return false;
+		}
+		int added = xpman.getXP(player) + count;
 		int leftXP = 0;
 		// if after pickup XP>maxXP -> set XP = maxXP
 		if (Config.maxXP != 0 && added > Config.maxXP) {
 			leftXP = added - Config.maxXP;
 			added = Config.maxXP;
 		}
-		xpman.setXP(p, added);
-		p.playSound(p.getLocation(), SoundMachine.get("ORB_PICKUP", "ENTITY_EXPERIENCE_ORB_PICKUP"), 0.2F, 1.5F);
-		xpman.sendXPMessage(p, count);
+		xpman.setXP(player, added);
+		player.playSound(player.getLocation(), SoundMachine.get("ORB_PICKUP", "ENTITY_EXPERIENCE_ORB_PICKUP"), 0.2F, 1.5F);
+		xpman.sendXPMessage(player, count);
 		if (leftXP > 0) {
-			e.setCancelled(true);
-			final ItemStack s = stack.clone();
-			final ItemMeta meta = s.getItemMeta();
-			meta.setDisplayName("§b§l&BedwarsXP_DropedXP");
-			meta.setLore(Arrays.asList(String.valueOf(leftXP)));
-			s.setItemMeta(meta);
-			entity.setItemStack(s);
-			entity.setPickupDelay(10);
-		} else {
-			e.setCancelled(true);
-			entity.remove();
+			dropXPBottle(player, leftXP);
 		}
+		return true;
+	}
+
+	private void dropXPBottle(Player player, int xp) {
+		final ItemStack dropStack = new ItemStack(Material.EXP_BOTTLE, 16);
+		final ItemMeta meta = dropStack.getItemMeta();
+		meta.setDisplayName("§b§l&BedwarsXP_DroppedXP");
+		meta.setLore(Collections.singletonList(String.valueOf(xp)));
+		meta.addEnchant(Enchantment.LOOT_BONUS_MOBS, 1, true);
+		dropStack.setItemMeta(meta);
+		final Item droppedItem = player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), dropStack);
+		droppedItem.setPickupDelay(40);
 	}
 
 	@EventHandler
@@ -87,11 +98,8 @@ public class EventListeners implements Listener {
 			return;
 		if (e.getInventory() == null)
 			return;
-		final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer((Player) e.getPlayer());
-		if (bw == null)
-			return;
-		if (!Config.isGameEnabledXP(bw.getName()))
-			return;
+		final Game bw = checkGame((Player) e.getPlayer());
+		if (bw == null) return;
 		if (e.getInventory().getType().equals(InventoryType.ANVIL)) {
 			e.setCancelled(true);
 		}
@@ -99,13 +107,11 @@ public class EventListeners implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(final PlayerDeathEvent e) {
-		final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(e.getEntity());
-		if (bw == null)
-			return;
-		if (!Config.isGameEnabledXP(bw.getName()))
-			return;
+		Player p = e.getEntity();
+		final Game bw = checkGame(p);
+		if (bw == null) return;
+
 		final XPManager xpman = XPManager.getXPManager(bw.getName());
-		final Player p = e.getEntity();
 		// 计算死亡扣除经验值
 		int costed = (int) (xpman.getXP(p) * Config.deathCost);
 		// 计算死亡掉落经验值
@@ -115,7 +121,7 @@ public class EventListeners implements Listener {
 		}
 		final BedwarsXPDeathDropXPEvent event = new BedwarsXPDeathDropXPEvent(bw.getName(), p, dropped, costed);
 		Bukkit.getPluginManager().callEvent(event);
-		costed = event.getXPCosted();
+		costed = event.getXPCost();
 		dropped = event.getXPDropped();
 		// 扣除经验
 		int to = xpman.getXP(p) - costed;
@@ -128,14 +134,20 @@ public class EventListeners implements Listener {
 		if (Config.deathDrop > 0) {
 			if (dropped < 1)
 				return;
-			final ItemStack dropStack = new ItemStack(Material.EXP_BOTTLE, 16);
-			final ItemMeta meta = dropStack.getItemMeta();
-			meta.setDisplayName("§b§l&BedwarsXP_DropedXP");
-			meta.setLore(Arrays.asList(String.valueOf(dropped)));
-			meta.addEnchant(Enchantment.LOOT_BONUS_MOBS, 1, true);
-			dropStack.setItemMeta(meta);
-			final Item droppedItem = p.getWorld().dropItemNaturally(p.getLocation().add(0, 1, 0), dropStack);
-			droppedItem.setPickupDelay(40);
+			if (Config.dontDropExpBottle) {
+				EntityDamageEvent ev = p.getLastDamageCause();
+				if (ev instanceof EntityDamageByEntityEvent) {
+					Object killer = ((EntityDamageByEntityEvent) ev).getDamager();
+					if (killer instanceof Projectile) {
+						killer = ((Projectile) killer).getShooter();
+					}
+					if (killer instanceof Player) {
+						pickupXP(bw, (Player) killer, dropped);
+						return;
+					}
+				}
+			}
+			dropXPBottle(p, dropped);
 		}
 	}
 
@@ -157,12 +169,9 @@ public class EventListeners implements Listener {
 
 	@EventHandler
 	public void onPlayerTeleport(final PlayerTeleportEvent e) { // 在玩家传送后更新经验条
-		final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(e.getPlayer());
-		if (bw == null)
-			return;
-		if (!Config.isGameEnabledXP(bw.getName()))
-			return;
-		final Player p = e.getPlayer();
+		Player p = e.getPlayer();
+		final Game bw = checkGame(p);
+		if (bw == null) return;
 		Bukkit.getScheduler().runTaskLater(BedwarsXP.getInstance(),
 				() -> XPManager.getXPManager(bw.getName()).updateXPBar(p), 5);
 
@@ -170,11 +179,17 @@ public class EventListeners implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(final PlayerInteractEvent e) {
-		final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(e.getPlayer());
-		if (bw == null)
-			return;
-		if (!Config.isGameEnabledXP(bw.getName()))
-			return;
+		final Game bw = checkGame(e.getPlayer());
+		if (bw == null) return;
 		XPManager.getXPManager(bw.getName()).updateXPBar(e.getPlayer());
+	}
+
+	private Game checkGame(Player player) {
+		final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+		if (bw == null)
+			return null;
+		if (!Config.isGameEnabledXP(bw.getName()))
+			return null;
+		return bw;
 	}
 }

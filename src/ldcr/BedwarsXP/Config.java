@@ -1,21 +1,16 @@
 package ldcr.BedwarsXP;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import ldcr.BedwarsXP.utils.ListUtils;
+import ldcr.BedwarsXP.utils.YamlUtils;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import ldcr.BedwarsXP.utils.ListUtils;
-import ldcr.BedwarsXP.utils.YamlUtils;
-import lombok.Getter;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class Config {
 	private static int configVersion = 2;
@@ -31,7 +26,7 @@ public class Config {
 
 	public static double deathCost;
 	public static double deathDrop;
-
+	public static boolean dontDropExpBottle;
 	public static int maxXP;
 	public static String maxXPMessage;
 
@@ -88,6 +83,9 @@ public class Config {
 		deathDrop = configYaml.getInt("DeathDropXP", 0) / 100.0;
 		BedwarsXP.sendConsoleMessage(
 				"§6§lBedwarsXP §7>> §a" + (deathDrop == 0 ? BedwarsXP.l18n("DEATH_DROP_XP_DISABLED") : BedwarsXP.l18n("DEATH_DROP_XP_PERCEMT", "%percent%", String.valueOf(deathDrop * 100))));
+		dontDropExpBottle = configYaml.getBoolean("DontDropExpBottle", false);
+		if (dontDropExpBottle)
+			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a" + BedwarsXP.l18n("DEATH_DROP_EXP_BOTTLE_DISABLED"));
 
 		maxXP = configYaml.getInt("MaxXP");
 		maxXPMessage = configYaml.getString("MaxXPMessage").replaceAll("&", "§").replaceAll("§§", "§");
