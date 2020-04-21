@@ -10,8 +10,8 @@ public class BedwarsXPDeathDropXPEvent extends Event {
 		return new HandlerList();
 	}
 
-	private String game;
-	private Player player;
+	private final String game;
+	private final Player player;
 	private int deathCost;
 	private int deathDropped;
 

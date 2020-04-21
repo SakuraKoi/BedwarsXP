@@ -30,7 +30,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 
-public class EventListeners implements Listener {
+class EventListeners implements Listener {
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent e) {
 		Player p = e.getPlayer();

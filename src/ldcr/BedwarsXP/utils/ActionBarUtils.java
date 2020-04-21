@@ -3,109 +3,104 @@ package ldcr.BedwarsXP.utils;
 import ldcr.BedwarsXP.BedwarsXP;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ActionBarUtils {
-	private static String nmsver;
-	private static boolean useOldMethods = false;
-	private static boolean useNewMethods = false;
-	public static void load() {
-		nmsver = Bukkit.getServer().getClass().getPackage().getName();
-		nmsver = nmsver.substring(nmsver.lastIndexOf('.') + 1);
+    private static boolean USE_CHAT = false;
+    private static boolean USE_1_7_NMS = false;
+    private static boolean USE_1_8_NMS = false;
+    private static boolean USE_1_11_API = false;
 
-		if (nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_7_")) {
-			useOldMethods = true;
-		} else {
-			try {
-				int ver = Integer.parseInt(nmsver.split("_")[1]);
-				if (ver>=11) {
-					useNewMethods = true;
-				}
-			} catch (Exception e) {
-				BedwarsXP.sendConsoleMessage("§cERROR: "+BedwarsXP.l18n("ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK"));
-			}
-		}
-	}
+    private static Class<?> classCraftPlayer;
+    private static Class<?> classPacketPlayOutChat;
+    private static Class<?> classPacket;
+    private static Class<?> classChatSerializer;
+    private static Method methodSerializeMessage;
+    private static Class<?> classIChatBaseComponent;
+    private static Class<?> classChatComponentText;
+    private static Method methodGetHandle = null;
+    private static Field fieldPlayerConnection = null;
+    private static Method methodSendPacket = null;
 
-	public static void sendActionBar(Player player, String message) {
-		if (useNewMethods) {
-			player.sendActionBar(message);
-			return;
-		}
-		try {
-			Class<?> c1 = Class.forName("org.bukkit.craftbukkit." + nmsver
-					+ ".entity.CraftPlayer");
-			Object p = c1.cast(player);
-			Object ppoc;
-			Class<?> c4 = Class.forName("net.minecraft.server." + nmsver
-					+ ".PacketPlayOutChat");
-			Class<?> c5 = Class.forName("net.minecraft.server." + nmsver
-					+ ".Packet");
-			if (useOldMethods) {
-				Class<?> c2 = Class.forName("net.minecraft.server." + nmsver
-						+ ".ChatSerializer");
-				Class<?> c3 = Class.forName("net.minecraft.server." + nmsver
-						+ ".IChatBaseComponent");
-				Method m3 = c2.getDeclaredMethod("a", String.class);
-				Object cbc = c3.cast(m3.invoke(c2, "{\"text\": \"" + message
-						+ "\"}"));
-				ppoc = c4.getConstructor(c3, byte.class)
-						.newInstance(cbc, (byte) 2);
-			} else {
-				Class<?> c2 = Class.forName("net.minecraft.server." + nmsver
-						+ ".ChatComponentText");
-				Class<?> c3 = Class.forName("net.minecraft.server." + nmsver
-						+ ".IChatBaseComponent");
-				Object o = c2.getConstructor(String.class )
-						.newInstance(message);
-				ppoc = c4.getConstructor(c3, byte.class)
-						.newInstance(o, (byte) 2);
-			}
-			Method m1 = c1.getDeclaredMethod("getHandle");
-			Object h = m1.invoke(p);
-			Field f1 = h.getClass().getDeclaredField("playerConnection");
-			Object pc = f1.get(h);
-			Method m5 = pc.getClass().getDeclaredMethod("sendPacket", c5);
-			m5.invoke(pc, ppoc);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			player.sendMessage(message);
-		}
-	}
+    public static void load() {
+        String NMS_VERSION = Bukkit.getServer().getClass().getPackage().getName();
+        NMS_VERSION = NMS_VERSION.substring(NMS_VERSION.lastIndexOf('.') + 1);
 
-	public static void sendActionBar(Player player, String message,
-			int duration) {
-		sendActionBar(player, message);
+        if (NMS_VERSION.equalsIgnoreCase("v1_8_R1") || NMS_VERSION.equalsIgnoreCase("v1_7_")) {
+            USE_1_7_NMS = true;
+        } else {
+            try {
+                int ver = Integer.parseInt(NMS_VERSION.split("_")[1]);
+                if (ver >= 11) {
+                    USE_1_11_API = true;
+                } else {
+                    USE_1_8_NMS = true;
+                }
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+                BedwarsXP.sendConsoleMessage("§cERROR: " + BedwarsXP.l18n("ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK"));
+                USE_CHAT = true;
+            }
+        }
 
-		if (duration >= 0) {
-			// Sends empty message at the end of the duration. Allows messages
-			// shorter than 3 seconds, ensures precision.
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					sendActionBar(player, "");
-				}
-			}.runTaskLater(BedwarsXP.getInstance(), duration + 1L);
-		}
+        if (USE_1_7_NMS || USE_1_8_NMS) {
+            try {
+                classCraftPlayer = Class.forName("org.bukkit.craftbukkit." + NMS_VERSION + ".entity.CraftPlayer");
+                classPacketPlayOutChat = Class.forName("net.minecraft.server." + NMS_VERSION + ".PacketPlayOutChat");
+                classIChatBaseComponent = Class.forName("net.minecraft.server." + NMS_VERSION + ".IChatBaseComponent");
+                classPacket = Class.forName("net.minecraft.server." + NMS_VERSION + ".Packet");
+                if (USE_1_7_NMS) {
+                    classChatSerializer = Class.forName("net.minecraft.server." + NMS_VERSION + ".ChatSerializer");
+                    methodSerializeMessage = classChatSerializer.getDeclaredMethod("a", String.class);
+                } else {
+                    classChatComponentText = Class.forName("net.minecraft.server." + NMS_VERSION + ".ChatComponentText");
+                }
+            } catch (ReflectiveOperationException e) {
+                BedwarsXP.sendConsoleMessage("§cERROR: " + BedwarsXP.l18n("ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK"));
+                USE_1_7_NMS = false;
+                USE_1_8_NMS = false;
+                USE_CHAT = true;
+            }
+        }
+    }
 
-		while (duration > 60) {
-			duration -= 60;
-			int sched = duration % 60;
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					sendActionBar(player, message);
-				}
-			}.runTaskLater(BedwarsXP.getInstance(), sched);
-		}
-	}
+    public static void sendActionBar(Player player, String message) {
+        if (USE_CHAT) {
+            player.sendMessage(message);
+        } else if (USE_1_11_API) {
+            player.sendActionBar(message);
+        } else if (USE_1_7_NMS || USE_1_8_NMS) {
+            try {
+                Object objectCraftPlayer = classCraftPlayer.cast(player);
+                Object objectPacketChat;
+                Object objectChatComponent;
+                if (USE_1_7_NMS) {
+                    objectChatComponent = classIChatBaseComponent.cast(methodSerializeMessage.invoke(classChatSerializer, "{\"text\": \"" + message + "\"}"));
+                } else {
+                    objectChatComponent = classChatComponentText.getConstructor(String.class).newInstance(message);
+                }
+                objectPacketChat = classPacketPlayOutChat.getConstructor(classIChatBaseComponent, byte.class).newInstance(objectChatComponent, (byte) 2);
+                if (methodGetHandle == null)
+                    methodGetHandle = classCraftPlayer.getDeclaredMethod("getHandle");
+                Object objectEntityPlayer = methodGetHandle.invoke(objectCraftPlayer);
+                if (fieldPlayerConnection == null)
+                    fieldPlayerConnection = objectEntityPlayer.getClass().getDeclaredField("playerConnection");
+                Object objectPlayerConnection = fieldPlayerConnection.get(objectEntityPlayer);
+                if (methodSendPacket == null)
+                    methodSendPacket = objectPlayerConnection.getClass().getDeclaredMethod("sendPacket", classPacket);
+                methodSendPacket.invoke(objectPlayerConnection, objectPacketChat);
+            } catch (ReflectiveOperationException e) { // Reflection exception caught -> dont retry, switch to backend
+                e.printStackTrace();
+                USE_1_7_NMS = false;
+                USE_1_8_NMS = false;
+                USE_CHAT = true;
+                player.sendMessage(message);
+            } catch (Exception e) { // send message to chat instead, retry actionbar later
+                e.printStackTrace();
+                player.sendMessage(message);
+            }
+        }
+    }
 
-	public static void sendActionBarToAllPlayers(String message, int duration) {
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			sendActionBar(p, message, duration);
-		}
-	}
 }

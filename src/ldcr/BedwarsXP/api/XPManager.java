@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class XPManager {
-	private static Map<String, XPManager> managerMap = new HashMap<>();
-	private Map<UUID, Integer> xp = new HashMap<>();
+	private static final Map<String, XPManager> managerMap = new HashMap<>();
+	private final Map<UUID, Integer> xp = new HashMap<>();
 
 	public static XPManager getXPManager(String bedwarsGame) {
 		if (!managerMap.containsKey(bedwarsGame)) {
@@ -64,8 +64,8 @@ public class XPManager {
 		return get(player) >= count;
 	}
 
-	private HashMap<UUID, Long> messageTimeMap = new HashMap<>();
-	private HashMap<UUID, Integer> messageCountMap = new HashMap<>();
+	private final HashMap<UUID, Long> messageTimeMap = new HashMap<>();
+	private final HashMap<UUID, Integer> messageCountMap = new HashMap<>();
 
 	public void sendXPMessage(Player player, int count) {
 		if (!messageTimeMap.containsKey(player.getUniqueId())) {

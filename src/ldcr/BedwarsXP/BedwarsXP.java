@@ -50,7 +50,7 @@ public class BedwarsXP extends JavaPlugin {
 		sendConsoleMessage("§c https://github.com/Ldcr993519867/BedwarsXP/issues/1");
 		try {
 			new MetricsLite(this);
-		} catch (Exception e) {}
+		} catch (Exception ignored) {}
 	}
 
 	private boolean detectBedwarsRelVersion() {
@@ -67,7 +67,7 @@ public class BedwarsXP extends JavaPlugin {
 			return false;
 		}
 	}
-	@Getter private static Map<String, String> l18nCache = new HashMap<>();
+	@Getter private static final Map<String, String> l18nCache = new HashMap<>();
 	public static String l18n(String key, String... replacement) {
 		String message;
 		if (l18nCache.containsKey(key)) {

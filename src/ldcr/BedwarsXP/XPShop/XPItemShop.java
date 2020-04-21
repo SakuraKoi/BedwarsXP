@@ -23,22 +23,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class XPItemShop extends NewItemShop {
-	private Game bedwars;
+	private final Game bedwars;
 
-	public XPItemShop(List<MerchantCategory> cate, Game bw) {
+	XPItemShop(List<MerchantCategory> cate, Game bw) {
 		super(cate);
 		categories = cate;
 		bedwars = bw;
 	}
 
-	private List<MerchantCategory> categories = null;
+	private final List<MerchantCategory> categories;
 	private MerchantCategory currentCategory = null;
 
 	@Override
@@ -80,7 +77,7 @@ public class XPItemShop extends NewItemShop {
 		addCategoriesToInventory(inventory, player);
 
 		Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-		ItemStack stack = null;
+		ItemStack stack;
 
 		if (game != null) {
 			if (game.getPlayerSettings(player).oneStackPerShift()) {
@@ -89,7 +86,7 @@ public class XPItemShop extends NewItemShop {
 
 				meta.setDisplayName(ChatColor.AQUA + BedwarsRel._l("default.currently") + ": " + ChatColor.WHITE + BedwarsRel._l("ingame.shop.onestackpershift"));
 
-				meta.setLore(new ArrayList<String>());
+				meta.setLore(new ArrayList<>());
 				stack.setItemMeta(meta);
 			} else {
 				stack = new ItemStack(Material.LAVA_BUCKET, 1);
@@ -97,7 +94,7 @@ public class XPItemShop extends NewItemShop {
 
 				meta.setDisplayName(ChatColor.AQUA + BedwarsRel._l("default.currently") + ": " + ChatColor.WHITE + BedwarsRel._l("ingame.shop.fullstackpershift"));
 
-				meta.setLore(new ArrayList<String>());
+				meta.setLore(new ArrayList<>());
 				stack.setItemMeta(meta);
 			}
 
@@ -216,6 +213,7 @@ public class XPItemShop extends NewItemShop {
 		return getInventorySize(sizeCategories) + getInventorySize(sizeOffers);
 	}
 
+	@SuppressWarnings("deprecation")
 	private ItemStack toItemStack(VillagerTrade trade, Player player, Game game) {
 		ItemStack tradeStack = trade.getRewardItem().clone();
 		Method colorable = Utils.getColorableMethod(tradeStack.getType());
@@ -303,8 +301,6 @@ public class XPItemShop extends NewItemShop {
 						cancel = bought + item.getAmount() > 64;
 					}
 				}
-
-				bought = 0;
 			} else {
 				buyItem(trade, ice.getCurrentItem(), player);
 			}
@@ -321,56 +317,16 @@ public class XPItemShop extends NewItemShop {
 			int item1ToPay = trade.getItem1().getAmount();
 			Iterator<?> stackIterator = inventory.all(trade.getItem1().getType()).entrySet().iterator();
 			int firstItem1 = inventory.first(trade.getItem1());
-			if (firstItem1 > -1) {
-				inventory.clear(firstItem1);
-			} else {
-				while (stackIterator.hasNext()) {
-					Entry<?, ?> entry = (Entry<?, ?>) stackIterator.next();
-					ItemStack stack = (ItemStack) entry.getValue();
-
-					int endAmount = stack.getAmount() - item1ToPay;
-					if (endAmount < 0) {
-						endAmount = 0;
-					}
-
-					item1ToPay -= stack.getAmount();
-					stack.setAmount(endAmount);
-					inventory.setItem(((Integer) entry.getKey()).intValue(), stack);
-
-					if (item1ToPay <= 0) {
-						break;
-					}
-				}
-			}
+			takeItem(inventory, item1ToPay, stackIterator, firstItem1);
 			if (trade.getItem2() != null) {
 				int item2ToPay = trade.getItem2().getAmount();
 				stackIterator = inventory.all(trade.getItem2().getType()).entrySet().iterator();
 
 				int firstItem2 = inventory.first(trade.getItem2());
-				if (firstItem2 > -1) {
-					inventory.clear(firstItem2);
-				} else {
-					while (stackIterator.hasNext()) {
-						Entry<?, ?> entry = (Entry<?, ?>) stackIterator.next();
-
-						ItemStack stack = (ItemStack) entry.getValue();
-
-						int endAmount = stack.getAmount() - item2ToPay;
-						if (endAmount < 0) {
-							endAmount = 0;
-						}
-
-						item2ToPay -= stack.getAmount();
-						stack.setAmount(endAmount);
-						inventory.setItem(((Integer) entry.getKey()).intValue(), stack);
-
-						if (item2ToPay <= 0) {
-							break;
-						}
-					}
-				}
+				takeItem(inventory, item2ToPay, stackIterator, firstItem2);
 			}
 		} else {
+			// Already checked has enough XP
 			XPManager.getXPManager(bedwars.getName()).takeXP(player, ((XPVillagerTrade) trade).getXp());
 		}
 		ItemStack addingItem = item.clone();
@@ -389,7 +345,7 @@ public class XPItemShop extends NewItemShop {
 
 		HashMap<Integer, ? extends ItemStack> notStored = inventory.addItem(addingItem);
 		if (notStored.size() > 0) {
-			ItemStack notAddedItem = notStored.get(Integer.valueOf(0));
+			ItemStack notAddedItem = notStored.get(0);
 			int removingAmount = addingItem.getAmount() - notAddedItem.getAmount();
 			addingItem.setAmount(removingAmount);
 			inventory.removeItem(addingItem);
@@ -406,6 +362,30 @@ public class XPItemShop extends NewItemShop {
 		return success;
 	}
 
+	private void takeItem(PlayerInventory inventory, int item1ToPay, Iterator<?> stackIterator, int firstItem1) {
+		if (firstItem1 > -1) {
+			inventory.clear(firstItem1);
+		} else {
+			while (stackIterator.hasNext()) {
+				Entry<?, ?> entry = (Entry<?, ?>) stackIterator.next();
+				ItemStack stack = (ItemStack) entry.getValue();
+
+				int endAmount = stack.getAmount() - item1ToPay;
+				if (endAmount < 0) {
+					endAmount = 0;
+				}
+
+				item1ToPay -= stack.getAmount();
+				stack.setAmount(endAmount);
+				inventory.setItem((Integer) entry.getKey(), stack);
+
+				if (item1ToPay <= 0) {
+					break;
+				}
+			}
+		}
+	}
+
 	private boolean hasEnoughRessource(Player player, VillagerTrade trade) {
 		if (trade instanceof XPVillagerTrade)
 			return XPManager.getXPManager(bedwars.getName()).hasEnoughXP(player, ((XPVillagerTrade) trade).getXp());
@@ -415,10 +395,8 @@ public class XPItemShop extends NewItemShop {
 			PlayerInventory inventory = player.getInventory();
 
 			if (item2 != null) {
-				if (!inventory.contains(item1.getType(), item1.getAmount()) || !inventory.contains(item2.getType(), item2.getAmount()))
-					return false;
+				return inventory.contains(item1.getType(), item1.getAmount()) && inventory.contains(item2.getType(), item2.getAmount());
 			} else return inventory.contains(item1.getType(), item1.getAmount());
-			return true;
 		}
 	}
 
