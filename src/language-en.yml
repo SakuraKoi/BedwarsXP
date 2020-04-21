@@ -73,5 +73,8 @@ SHOP_XP_EXCHANGE_LORE: '§aBuy resource with XP'
 
 SHOP_TRADE_XP: '§a%xp% XP'
 
+# Update checker
+HAS_UPDATE: 'Your BedwarsXP is outdated! Update now -> %link%'
+
 # Others
 ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK: 'Unsupported server version, ActionBar may not works'

@@ -20,6 +20,8 @@ public class Config {
     @Getter
     private static YamlConfiguration languageYaml;
 
+    public static boolean disableUpdateChecker;
+
     public static String xpMessage;
     public static boolean addResShop;
 
@@ -68,6 +70,8 @@ public class Config {
             configFile = new File("plugins/BedwarsXP/config.yml");
             configYaml = YamlConfiguration.loadConfiguration(configFile);
         }
+
+        disableUpdateChecker = configYaml.getBoolean("Disable_UpdateChecker", true);
 
         xpMessage = configYaml.getString("Message").replaceAll("&", "§").replaceAll("§§", "§");
         addResShop = configYaml.getBoolean("Add_Res_Shop");

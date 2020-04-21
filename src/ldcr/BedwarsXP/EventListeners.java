@@ -23,6 +23,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
@@ -183,6 +184,16 @@ class EventListeners implements Listener {
 		Game bw = checkGame(e.getPlayer());
 		if (bw == null) return;
 		XPManager.getXPManager(bw.getName()).updateXPBar(e.getPlayer());
+	}
+
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent e) {
+		if (BedwarsXP.getUpdateUrl() != null && e.getPlayer().hasPermission("bedwarsxp.admin")) {
+			Bukkit.getScheduler().runTaskLater(BedwarsXP.getInstance(), () -> {
+				if (e.getPlayer().isOnline())
+					e.getPlayer().sendMessage("§6§lBedwarsXP §7>> §b" + BedwarsXP.l18n("HAS_UPDATE", "%link%", BedwarsXP.getUpdateUrl()));
+			}, 30);
+		}
 	}
 
 	private Game checkGame(Player player) {

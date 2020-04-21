@@ -3,6 +3,9 @@
 #       By.SakuraKooi         #
 ###############################
 
+# 关闭更新检查
+Disable_UpdateChecker: false
+
 #设置资源可兑换为的XP数
 XP:
     # 铜可兑换为的XP

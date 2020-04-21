@@ -69,5 +69,8 @@ SHOP_XP_EXCHANGE_LORE: '§a将你的经验兑换成物品'
 
 SHOP_TRADE_XP: '§a%xp% 经验'
 
+# Update checker
+HAS_UPDATE: 'BedwarsXP 发布了新版本! 下载 -> %link%'
+
 # Others
 ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK: '解析服务端版本失败, ActionBar提示可能出错'

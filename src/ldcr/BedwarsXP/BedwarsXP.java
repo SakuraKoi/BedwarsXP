@@ -9,7 +9,9 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import sakura.kooi.utils.GithubUpdateChecker.UpdateChecker;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,11 @@ public class BedwarsXP extends JavaPlugin {
 	private static BedwarsXP instance;
 	@Getter
 	private static CommandSender consoleSender;
+
+	@Getter private static final Map<String, String> l18nCache = new HashMap<>();
+
+	@Getter
+	private static String updateUrl = null;
 
 	@Override
 	public void onEnable() {
@@ -41,13 +48,24 @@ public class BedwarsXP extends JavaPlugin {
 			sendConsoleMessage("§c§lERROR: §c-----------------------------------");
 			sendConsoleMessage("§c§lERROR: §c"+l18n("ERROR_OCCURRED_WHILE_LOADING"));
 			sendConsoleMessage("§c§lERROR: §e   ↓↓ << "+l18n("REPORT_ISSUE_HERE")+" >> ↓↓  ");
-			sendConsoleMessage("§c§lERROR: §c https://github.com/Ldcr993519867/BedwarsXP/issues/1");
+			sendConsoleMessage("§c§lERROR: §c https://github.com/SakuraKoi/BedwarsXP/issues/1");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
 		sendConsoleMessage("§b"+l18n("SUCCESSFULLY_LOADED")+" By.SakuraKooi");
 		sendConsoleMessage("§e   ↓↓ << "+l18n("REPORT_ISSUE_AND_SUGGESTION_HERE")+" >> ↓↓  ");
-		sendConsoleMessage("§c https://github.com/Ldcr993519867/BedwarsXP/issues/1");
+		sendConsoleMessage("§c https://github.com/SakuraKoi/BedwarsXP/issues/1");
+		// Update checker and metrics
+		if (!Config.disableUpdateChecker) {
+			Bukkit.getScheduler().runTaskLater(this, () -> {
+				try {
+					new UpdateChecker("SakuraKoi", "BedwarsXP", "v"+getDescription().getVersion(), link -> {
+						updateUrl = link;
+						sendConsoleMessage("§b"+l18n("HAS_UPDATE", "%link%", link));
+					}).check();
+				} catch (IOException ignored) { }
+			}, 100);
+		}
 		try {
 			new MetricsLite(this);
 		} catch (Exception ignored) {}
@@ -67,7 +85,7 @@ public class BedwarsXP extends JavaPlugin {
 			return false;
 		}
 	}
-	@Getter private static final Map<String, String> l18nCache = new HashMap<>();
+
 	public static String l18n(String key, String... replacement) {
 		String message;
 		if (l18nCache.containsKey(key)) {
@@ -81,8 +99,8 @@ public class BedwarsXP extends JavaPlugin {
 		}
 		return message;
 	}
+
 	public static void sendConsoleMessage(String str) {
 		consoleSender.sendMessage("§6§lBedwarsXP §7>> " + str);
 	}
-
 }
