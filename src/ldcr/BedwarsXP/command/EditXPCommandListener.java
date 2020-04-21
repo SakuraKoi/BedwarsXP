@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 public class EditXPCommandListener implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final Command arg1, final String arg2, final String[] args) {
+	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args) {
 		if (args.length < 3) {
 			SendMessageUtils.sendMessage(sender,
 					"§6§lBedwarsXP §7>> §bBedwarsXP v."+BedwarsXP.getInstance().getDescription().getVersion()+" §lBy.SakuraKooi",
@@ -27,12 +27,12 @@ public class EditXPCommandListener implements CommandExecutor {
 			sender.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("YOU_DONT_HAVE_PERMISSION_TO_EXECUTE_THIS_COMMAND"));
 			return true;
 		}
-		final String user = args[1];
-		final OfflinePlayer offPlayer = Bukkit.getPlayer(user);
+		String user = args[1];
+		OfflinePlayer offPlayer = Bukkit.getPlayer(user);
 		if (offPlayer != null) {
 			if (offPlayer.isOnline()) {
-				final Player p = offPlayer.getPlayer();
-				final Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(p);
+				Player p = offPlayer.getPlayer();
+				Game bw = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(p);
 				if (bw == null) {
 					sender.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("EDITXP_PLAYER_NOT_IN_GAME", "%player%", p.getName()));
 					return true;
@@ -41,22 +41,22 @@ public class EditXPCommandListener implements CommandExecutor {
 					sender.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("EDITXP_GAME_IS_NOT_XP_MODE", "%player%", p.getName()));
 					return true;
 				}
-				final int xp;
+				int xp;
 				try {
 					xp = Integer.valueOf(args[2]);
-				} catch (final NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					sender.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("EDITXP_XP_IS_NOT_A_NUMBER"));
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("set")) {
+				if ("set".equalsIgnoreCase(args[0])) {
 					XPManager.getXPManager(bw.getName()).setXP(p, xp);
 					sender.sendMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("EDITXP_XP_HAS_BEEN_SET_TO", "%player%", p.getName(), "%xp%", String.valueOf(xp)));
-				} else if (args[0].equalsIgnoreCase("add")) {
-					final int current = XPManager.getXPManager(bw.getName()).getXP(p);
+				} else if ("add".equalsIgnoreCase(args[0])) {
+					int current = XPManager.getXPManager(bw.getName()).getXP(p);
 					XPManager.getXPManager(bw.getName()).setXP(p, current+xp);
 					sender.sendMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("EDITXP_XP_HAS_BEEN_SET_TO", "%player%", p.getName(), "%xp%", String.valueOf(current+xp)));
-				} else if (args[0].equalsIgnoreCase("take")) {
-					final int current = XPManager.getXPManager(bw.getName()).getXP(p);
+				} else if ("take".equalsIgnoreCase(args[0])) {
+					int current = XPManager.getXPManager(bw.getName()).getXP(p);
 					XPManager.getXPManager(bw.getName()).setXP(p, current-xp);
 					sender.sendMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("EDITXP_XP_HAS_BEEN_SET_TO", "%player%", p.getName(), "%xp%", String.valueOf(current-xp)));
 				} else {

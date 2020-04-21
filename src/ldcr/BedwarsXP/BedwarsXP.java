@@ -35,7 +35,7 @@ public class BedwarsXP extends JavaPlugin {
 			Bukkit.getPluginManager().registerEvents(new EventListeners(), this);
 			getCommand("bedwarsxp").setExecutor(new BedwarsXPCommandListener());
 			getCommand("bedwarsxpedit").setExecutor(new EditXPCommandListener());
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			sendConsoleMessage("§c§lERROR: §c-----------------------------------");
 			e.printStackTrace();
 			sendConsoleMessage("§c§lERROR: §c-----------------------------------");
@@ -50,7 +50,7 @@ public class BedwarsXP extends JavaPlugin {
 		sendConsoleMessage("§c https://github.com/Ldcr993519867/BedwarsXP/issues/1");
 		try {
 			new MetricsLite(this);
-		} catch (final Exception e) {}
+		} catch (Exception e) {}
 	}
 
 	private boolean detectBedwarsRelVersion() {
@@ -67,8 +67,8 @@ public class BedwarsXP extends JavaPlugin {
 			return false;
 		}
 	}
-	@Getter private static final Map<String, String> l18nCache = new HashMap<>();
-	public static String l18n(final String key, final String... replacement) {
+	@Getter private static Map<String, String> l18nCache = new HashMap<>();
+	public static String l18n(String key, String... replacement) {
 		String message;
 		if (l18nCache.containsKey(key)) {
 			message = l18nCache.get(key);
@@ -81,7 +81,7 @@ public class BedwarsXP extends JavaPlugin {
 		}
 		return message;
 	}
-	public static void sendConsoleMessage(final String str) {
+	public static void sendConsoleMessage(String str) {
 		consoleSender.sendMessage("§6§lBedwarsXP §7>> " + str);
 	}
 

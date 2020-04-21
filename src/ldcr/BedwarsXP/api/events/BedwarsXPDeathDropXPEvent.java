@@ -10,12 +10,12 @@ public class BedwarsXPDeathDropXPEvent extends Event {
 		return new HandlerList();
 	}
 
-	private String game = "";
-	private final Player player;
+	private String game;
+	private Player player;
 	private int deathCost;
 	private int deathDropped;
 
-	public BedwarsXPDeathDropXPEvent(final String game, final Player p, final int dropped, final int cost) {
+	public BedwarsXPDeathDropXPEvent(String game, Player p, int dropped, int cost) {
 		this.game = game;
 		player = p;
 		deathCost = cost;
@@ -34,7 +34,7 @@ public class BedwarsXPDeathDropXPEvent extends Event {
 		return deathCost;
 	}
 
-	public void setXPCost(final int drop) {
+	public void setXPCost(int drop) {
 		deathCost = drop;
 	}
 
@@ -42,7 +42,7 @@ public class BedwarsXPDeathDropXPEvent extends Event {
 		return deathDropped;
 	}
 
-	public void setXPDropped(final int deathDropped) {
+	public void setXPDropped(int deathDropped) {
 		this.deathDropped = deathDropped;
 	}
 
@@ -52,7 +52,7 @@ public class BedwarsXPDeathDropXPEvent extends Event {
 	}
 
 	@Deprecated
-	public void setXPCosted(final int drop) {
+	public void setXPCosted(int drop) {
 		deathCost = drop;
 	}
 

@@ -9,17 +9,17 @@ import org.bukkit.inventory.ItemStack;
 public class XPVillagerTrade extends VillagerTrade {
 	@Setter private int xp = 0;
 
-	public XPVillagerTrade(final VillagerTrade t) {
+	public XPVillagerTrade(VillagerTrade t) {
 		super(t.getItem1(), t.getItem2(), t.getRewardItem());
 		setXp(ResourceUtils.convertResToXP(t.getItem1()) + ResourceUtils.convertResToXP(t.getItem2()));
 	}
 
-	public XPVillagerTrade(final ItemStack convert) {
+	public XPVillagerTrade(ItemStack convert) {
 		super(convert, null, convert);
 		setXp(ResourceUtils.convertResToXP(convert));
 	}
 
-	public XPVillagerTrade(final int xp, final ItemStack rewardItem) {
+	public XPVillagerTrade(int xp, ItemStack rewardItem) {
 		super(new ItemStack(Material.EXP_BOTTLE, xp), rewardItem);
 		setXp(xp);
 	}

@@ -1,13 +1,12 @@
 package ldcr.BedwarsXP.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
+import ldcr.BedwarsXP.BedwarsXP;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import ldcr.BedwarsXP.BedwarsXP;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class ActionBarUtils {
 	private static String nmsver;
@@ -21,63 +20,63 @@ public class ActionBarUtils {
 			useOldMethods = true;
 		} else {
 			try {
-				final int ver = Integer.parseInt(nmsver.split("_")[1]);
+				int ver = Integer.parseInt(nmsver.split("_")[1]);
 				if (ver>=11) {
 					useNewMethods = true;
 				}
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				BedwarsXP.sendConsoleMessage("§cERROR: "+BedwarsXP.l18n("ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK"));
 			}
 		}
 	}
 
-	public static void sendActionBar(final Player player, final String message) {
+	public static void sendActionBar(Player player, String message) {
 		if (useNewMethods) {
 			player.sendActionBar(message);
 			return;
 		}
 		try {
-			final Class<?> c1 = Class.forName("org.bukkit.craftbukkit." + nmsver
+			Class<?> c1 = Class.forName("org.bukkit.craftbukkit." + nmsver
 					+ ".entity.CraftPlayer");
-			final Object p = c1.cast(player);
+			Object p = c1.cast(player);
 			Object ppoc;
-			final Class<?> c4 = Class.forName("net.minecraft.server." + nmsver
+			Class<?> c4 = Class.forName("net.minecraft.server." + nmsver
 					+ ".PacketPlayOutChat");
-			final Class<?> c5 = Class.forName("net.minecraft.server." + nmsver
+			Class<?> c5 = Class.forName("net.minecraft.server." + nmsver
 					+ ".Packet");
 			if (useOldMethods) {
-				final Class<?> c2 = Class.forName("net.minecraft.server." + nmsver
+				Class<?> c2 = Class.forName("net.minecraft.server." + nmsver
 						+ ".ChatSerializer");
-				final Class<?> c3 = Class.forName("net.minecraft.server." + nmsver
+				Class<?> c3 = Class.forName("net.minecraft.server." + nmsver
 						+ ".IChatBaseComponent");
-				final Method m3 = c2.getDeclaredMethod("a", String.class);
-				final Object cbc = c3.cast(m3.invoke(c2, "{\"text\": \"" + message
+				Method m3 = c2.getDeclaredMethod("a", String.class);
+				Object cbc = c3.cast(m3.invoke(c2, "{\"text\": \"" + message
 						+ "\"}"));
 				ppoc = c4.getConstructor(c3, byte.class)
 						.newInstance(cbc, (byte) 2);
 			} else {
-				final Class<?> c2 = Class.forName("net.minecraft.server." + nmsver
+				Class<?> c2 = Class.forName("net.minecraft.server." + nmsver
 						+ ".ChatComponentText");
-				final Class<?> c3 = Class.forName("net.minecraft.server." + nmsver
+				Class<?> c3 = Class.forName("net.minecraft.server." + nmsver
 						+ ".IChatBaseComponent");
-				final Object o = c2.getConstructor(String.class )
+				Object o = c2.getConstructor(String.class )
 						.newInstance(message);
 				ppoc = c4.getConstructor(c3, byte.class)
 						.newInstance(o, (byte) 2);
 			}
-			final Method m1 = c1.getDeclaredMethod("getHandle");
-			final Object h = m1.invoke(p);
-			final Field f1 = h.getClass().getDeclaredField("playerConnection");
-			final Object pc = f1.get(h);
-			final Method m5 = pc.getClass().getDeclaredMethod("sendPacket", c5);
+			Method m1 = c1.getDeclaredMethod("getHandle");
+			Object h = m1.invoke(p);
+			Field f1 = h.getClass().getDeclaredField("playerConnection");
+			Object pc = f1.get(h);
+			Method m5 = pc.getClass().getDeclaredMethod("sendPacket", c5);
 			m5.invoke(pc, ppoc);
-		} catch (final Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			player.sendMessage(message);
 		}
 	}
 
-	public static void sendActionBar(final Player player, final String message,
+	public static void sendActionBar(Player player, String message,
 			int duration) {
 		sendActionBar(player, message);
 
@@ -94,7 +93,7 @@ public class ActionBarUtils {
 
 		while (duration > 60) {
 			duration -= 60;
-			final int sched = duration % 60;
+			int sched = duration % 60;
 			new BukkitRunnable() {
 				@Override
 				public void run() {
@@ -104,12 +103,8 @@ public class ActionBarUtils {
 		}
 	}
 
-	public static void sendActionBarToAllPlayers(final String message) {
-		sendActionBarToAllPlayers(message, -1);
-	}
-
-	public static void sendActionBarToAllPlayers(final String message, final int duration) {
-		for (final Player p : Bukkit.getOnlinePlayers()) {
+	public static void sendActionBarToAllPlayers(String message, int duration) {
+		for (Player p : Bukkit.getOnlinePlayers()) {
 			sendActionBar(p, message, duration);
 		}
 	}

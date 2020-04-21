@@ -4,24 +4,24 @@ import java.lang.reflect.Field;
 
 public class ReflectionUtils {
 	private ReflectionUtils() {}
-	public static <T, R> void setPrivateValue(final T r, final String f, final R value)
+	public static <T, R> void setPrivateValue(T r, String f, R value)
 			throws Exception {
-		final Class<? extends Object> clazz = r.getClass();
-		final Field field = clazz.getDeclaredField(f);
+		Class<? extends Object> clazz = r.getClass();
+		Field field = clazz.getDeclaredField(f);
 		field.setAccessible(true);
 		field.set(r, value);
 		field.setAccessible(false);
 	}
 
-	public static <T> Field getField(final T r, final String f) throws ReflectiveOperationException {
-		final Class<? extends Object> clazz = r.getClass();
+	public static <T> Field getField(T r, String f) throws ReflectiveOperationException {
+		Class<? extends Object> clazz = r.getClass();
 		return clazz.getDeclaredField(f);
 	}
 
-	public static boolean isClassFound(final String class_path) {
+	public static boolean isClassFound(String class_path) {
 		try {
 			Class.forName(class_path);
-		} catch (final ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			return false;
 		}
 		return true;

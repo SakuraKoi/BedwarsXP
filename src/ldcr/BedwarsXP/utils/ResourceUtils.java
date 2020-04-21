@@ -4,7 +4,7 @@ import ldcr.BedwarsXP.Config;
 import org.bukkit.inventory.ItemStack;
 
 public class ResourceUtils {
-	public static int convertResToXP(final ItemStack stack) {
+	public static int convertResToXP(ItemStack stack) {
 		if (stack == null)
 			return 0;
 		int count = 0;

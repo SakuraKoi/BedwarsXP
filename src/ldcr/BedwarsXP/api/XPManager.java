@@ -10,29 +10,29 @@ import java.util.UUID;
 
 public class XPManager {
 	private static Map<String, XPManager> managerMap = new HashMap<>();
-	private final Map<UUID, Integer> xp = new HashMap<>();
+	private Map<UUID, Integer> xp = new HashMap<>();
 
-	public static XPManager getXPManager(final String bedwarsGame) {
+	public static XPManager getXPManager(String bedwarsGame) {
 		if (!managerMap.containsKey(bedwarsGame)) {
 			managerMap.put(bedwarsGame, new XPManager());
 		}
 		return managerMap.get(bedwarsGame);
 	}
 
-	public static void reset(final String bedwarsGame) {
+	public static void reset(String bedwarsGame) {
 		managerMap.remove(bedwarsGame);
 	}
 
-	public void updateXPBar(final Player player) {
+	public void updateXPBar(Player player) {
 		player.setLevel(get(player));
 	}
 
-	private void set(final Player player, final int count) {
+	private void set(Player player, int count) {
 		xp.put(player.getUniqueId(), count);
 		updateXPBar(player);
 	}
 
-	private int get(final Player player) {
+	private int get(Player player) {
 		Integer value = xp.get(player.getUniqueId());
 		if (value == null) {
 			value = 0;
@@ -41,33 +41,33 @@ public class XPManager {
 		return value;
 	}
 
-	public void setXP(final Player player, final int count) {
+	public void setXP(Player player, int count) {
 		set(player, count);
 	}
 
-	public int getXP(final Player player) {
+	public int getXP(Player player) {
 		return get(player);
 	}
 
-	public void addXP(final Player player, final int count) {
+	public void addXP(Player player, int count) {
 		set(player, get(player) + count);
 	}
 
-	public boolean takeXP(final Player player, final int count) {
+	public boolean takeXP(Player player, int count) {
 		if (!hasEnoughXP(player, count))
 			return false;
 		set(player, get(player) - count);
 		return true;
 	}
 
-	public boolean hasEnoughXP(final Player player, final int count) {
+	public boolean hasEnoughXP(Player player, int count) {
 		return get(player) >= count;
 	}
 
-	private final HashMap<UUID, Long> messageTimeMap = new HashMap<>();
-	private final HashMap<UUID, Integer> messageCountMap = new HashMap<>();
+	private HashMap<UUID, Long> messageTimeMap = new HashMap<>();
+	private HashMap<UUID, Integer> messageCountMap = new HashMap<>();
 
-	public void sendXPMessage(final Player player, final int count) {
+	public void sendXPMessage(Player player, int count) {
 		if (!messageTimeMap.containsKey(player.getUniqueId())) {
 			messageTimeMap.put(player.getUniqueId(), System.currentTimeMillis());
 		}
@@ -78,15 +78,15 @@ public class XPManager {
 			messageCountMap.put(player.getUniqueId(), 0);
 		}
 		messageTimeMap.put(player.getUniqueId(), System.currentTimeMillis());
-		final int c = messageCountMap.get(player.getUniqueId()) + count;
+		int c = messageCountMap.get(player.getUniqueId()) + count;
 		messageCountMap.put(player.getUniqueId(), c);
-		if (!Config.xpMessage.equals("")) {
+		if (!Config.xpMessage.isEmpty()) {
 			ActionBarUtils.sendActionBar(player, Config.xpMessage.replaceAll("%xp%", Integer.toString(c)));
 		}
 	}
 
-	public void sendMaxXPMessage(final Player player) {
-		if (!Config.maxXPMessage.equals("")) {
+	public void sendMaxXPMessage(Player player) {
+		if (!Config.maxXPMessage.isEmpty()) {
 			ActionBarUtils.sendActionBar(player, Config.maxXPMessage);
 		}
 	}

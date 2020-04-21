@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 public class BedwarsXPCommandListener implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final Command arg1, final String arg2, final String[] args) {
+	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args) {
 		if (args.length == 0) {
 			SendMessageUtils.sendMessage(sender,
 					"§6§lBedwarsXP §7>> §bBedwarsXP v."+BedwarsXP.getInstance().getDescription().getVersion()+" §lBy.SakuraKooi",
@@ -25,14 +25,6 @@ public class BedwarsXPCommandListener implements CommandExecutor {
 			return true;
 		}
 		switch (args[0].toLowerCase()) {
-			default: {
-				SendMessageUtils.sendMessage(sender,
-						"§6§lBedwarsXP §7>> §bBedwarsXP v."+BedwarsXP.getInstance().getDescription().getVersion()+" §lBy.SakuraKooi",
-						"§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("HELP_MAIN_RELOAD"),
-						"§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("HELP_MAIN_ENABLE"),
-						"§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("HELP_MAIN_DISABLE"));
-				break;
-			}
 			case "reload": {
 				Config.loadConfig();
 				BedwarsXP.getL18nCache().clear();
@@ -43,6 +35,7 @@ public class BedwarsXPCommandListener implements CommandExecutor {
 							"§6§lBedwarsXP §7>> §b"+BedwarsXP.l18n("UPDATE_RUNNING_GAME"));
 					BedwarsGameUtils.replaceAllShop(sender);
 				}
+				return true;
 			}
 			case "enable": {
 				if (args.length != 2) {
@@ -53,7 +46,7 @@ public class BedwarsXPCommandListener implements CommandExecutor {
 					sender.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_GAME_NOT_FOUND", "%game%", args[1]));
 					return true;
 				}
-				final String result = Config.setGameEnableXP(args[1], true);
+				String result = Config.setGameEnableXP(args[1], true);
 				if (result.equals("")) {
 					sender.sendMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("GAME_XP_ENABLED", "%game%", args[1]));
 					if (BedwarsGameUtils.isGameRunning(args[1])) {
@@ -73,7 +66,7 @@ public class BedwarsXPCommandListener implements CommandExecutor {
 					sender.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("ERROR_GAME_NOT_FOUND", "%game%", args[1]));
 					return true;
 				}
-				final String result = Config.setGameEnableXP(args[1], false);
+				String result = Config.setGameEnableXP(args[1], false);
 				if (result.equals("")) {
 					sender.sendMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("GAME_XP_DISABLED", "%game%", args[1]));
 					if (BedwarsGameUtils.isGameRunning(args[1])) {
@@ -84,8 +77,15 @@ public class BedwarsXPCommandListener implements CommandExecutor {
 				}
 				return true;
 			}
+			default: {
+				SendMessageUtils.sendMessage(sender,
+						"§6§lBedwarsXP §7>> §bBedwarsXP v."+BedwarsXP.getInstance().getDescription().getVersion()+" §lBy.SakuraKooi",
+						"§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("HELP_MAIN_RELOAD"),
+						"§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("HELP_MAIN_ENABLE"),
+						"§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("HELP_MAIN_DISABLE"));
+				return true;
+			}
 		}
-		return true;
 	}
 
 }

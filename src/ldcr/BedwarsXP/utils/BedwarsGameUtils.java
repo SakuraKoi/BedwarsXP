@@ -1,35 +1,34 @@
 package ldcr.BedwarsXP.utils;
 
-import java.util.ArrayList;
-
-import org.bukkit.command.CommandSender;
-
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
 import ldcr.BedwarsXP.XPShop.ShopReplacer;
+import org.bukkit.command.CommandSender;
+
+import java.util.ArrayList;
 
 public class BedwarsGameUtils {
-	public static boolean isGameExists(final String bw) {
+	public static boolean isGameExists(String bw) {
 		return BedwarsRel.getInstance().getGameManager().getGame(bw) != null;
 	}
 
-	public static boolean isGameRunning(final String bw) {
+	public static boolean isGameRunning(String bw) {
 		return BedwarsRel.getInstance().getGameManager().getGame(bw).getState().equals(GameState.RUNNING);
 	}
 
 	public static boolean isAnyBedwarsRunning() {
-		final ArrayList<Game> bw = BedwarsRel.getInstance().getGameManager().getGames();
-		for (final Game game : bw) {
+		ArrayList<Game> bw = BedwarsRel.getInstance().getGameManager().getGames();
+		for (Game game : bw) {
 			if (game.getState().equals(GameState.RUNNING))
 				return true;
 		}
 		return false;
 	}
 
-	public static void replaceAllShop(final CommandSender sender) {
-		final ArrayList<Game> bw = BedwarsRel.getInstance().getGameManager().getGames();
-		for (final Game game : bw) {
+	public static void replaceAllShop(CommandSender sender) {
+		ArrayList<Game> bw = BedwarsRel.getInstance().getGameManager().getGames();
+		for (Game game : bw) {
 			if (game.getState().equals(GameState.RUNNING)) {
 				ShopReplacer.replaceShop(game.getName(), sender);
 			}

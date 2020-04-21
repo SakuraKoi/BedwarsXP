@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 public class XPItemShop extends NewItemShop {
-	private final Game bedwars;
+	private Game bedwars;
 
-	public XPItemShop(final List<MerchantCategory> cate, final Game bw) {
+	public XPItemShop(List<MerchantCategory> cate, Game bw) {
 		super(cate);
 		categories = cate;
 		bedwars = bw;
@@ -52,16 +52,16 @@ public class XPItemShop extends NewItemShop {
 	}
 
 	@Override
-	public boolean hasOpenCategory(final MerchantCategory category) {
+	public boolean hasOpenCategory(MerchantCategory category) {
 		if (currentCategory == null)
 			return false;
 
 		return currentCategory.equals(category);
 	}
 
-	private int getCategoriesSize(final Player player) {
+	private int getCategoriesSize(Player player) {
 		int size = 0;
-		for (final MerchantCategory cat : categories) {
+		for (MerchantCategory cat : categories) {
 			if (cat.getMaterial() != null && (player == null || player.hasPermission(cat.getPermission()))) {
 				size++;
 			}
@@ -70,22 +70,22 @@ public class XPItemShop extends NewItemShop {
 	}
 
 	@Override
-	public void openCategoryInventory(final Player player) {
-		final int catSize = getCategoriesSize(player);
-		final int nom = catSize % 9 == 0 ? 9 : catSize % 9;
-		final int size = catSize + 9 - nom + 9;
+	public void openCategoryInventory(Player player) {
+		int catSize = getCategoriesSize(player);
+		int nom = catSize % 9 == 0 ? 9 : catSize % 9;
+		int size = catSize + 9 - nom + 9;
 
-		final Inventory inventory = Bukkit.createInventory(player, size, BedwarsRel._l("ingame.shop.name"));
+		Inventory inventory = Bukkit.createInventory(player, size, BedwarsRel._l("ingame.shop.name"));
 
 		addCategoriesToInventory(inventory, player);
 
-		final Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+		Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
 		ItemStack stack = null;
 
 		if (game != null) {
 			if (game.getPlayerSettings(player).oneStackPerShift()) {
 				stack = new ItemStack(Material.BUCKET, 1);
-				final ItemMeta meta = stack.getItemMeta();
+				ItemMeta meta = stack.getItemMeta();
 
 				meta.setDisplayName(ChatColor.AQUA + BedwarsRel._l("default.currently") + ": " + ChatColor.WHITE + BedwarsRel._l("ingame.shop.onestackpershift"));
 
@@ -93,7 +93,7 @@ public class XPItemShop extends NewItemShop {
 				stack.setItemMeta(meta);
 			} else {
 				stack = new ItemStack(Material.LAVA_BUCKET, 1);
-				final ItemMeta meta = stack.getItemMeta();
+				ItemMeta meta = stack.getItemMeta();
 
 				meta.setDisplayName(ChatColor.AQUA + BedwarsRel._l("default.currently") + ": " + ChatColor.WHITE + BedwarsRel._l("ingame.shop.fullstackpershift"));
 
@@ -106,13 +106,13 @@ public class XPItemShop extends NewItemShop {
 		player.openInventory(inventory);
 	}
 
-	private void addCategoriesToInventory(final Inventory inventory, final Player player) {
-		for (final MerchantCategory category : categories) {
+	private void addCategoriesToInventory(Inventory inventory, Player player) {
+		for (MerchantCategory category : categories) {
 			if (category.getMaterial() == null) {
 				BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatWriter.pluginMessage(ChatColor.RED + "Careful: Not supported material in shop category '" + category.getName() + "'"));
 			} else if (player == null || player.hasPermission(category.getPermission())) {
-				final ItemStack is = new ItemStack(category.getMaterial(), 1);
-				final ItemMeta im = is.getItemMeta();
+				ItemStack is = new ItemStack(category.getMaterial(), 1);
+				ItemMeta im = is.getItemMeta();
 
 				if (currentCategory != null && currentCategory.equals(category)) {
 					im.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
@@ -127,13 +127,13 @@ public class XPItemShop extends NewItemShop {
 		}
 	}
 
-	private int getInventorySize(final int itemAmount) {
-		final int nom = itemAmount % 9 == 0 ? 9 : itemAmount % 9;
+	private int getInventorySize(int itemAmount) {
+		int nom = itemAmount % 9 == 0 ? 9 : itemAmount % 9;
 		return itemAmount + 9 - nom;
 	}
 
 	@Override
-	public void handleInventoryClick(final InventoryClickEvent ice, final Game game, final Player player) {
+	public void handleInventoryClick(InventoryClickEvent ice, Game game, Player player) {
 		if (!hasOpenCategory()) {
 			handleCategoryInventoryClick(ice, game, player);
 		} else {
@@ -141,10 +141,10 @@ public class XPItemShop extends NewItemShop {
 		}
 	}
 
-	private void handleCategoryInventoryClick(final InventoryClickEvent ice, final Game game, final Player player) {
-		final int catSize = getCategoriesSize(player);
-		final int sizeCategories = getInventorySize(catSize) + 9;
-		final int rawSlot = ice.getRawSlot();
+	private void handleCategoryInventoryClick(InventoryClickEvent ice, Game game, Player player) {
+		int catSize = getCategoriesSize(player);
+		int sizeCategories = getInventorySize(catSize) + 9;
+		int rawSlot = ice.getRawSlot();
 
 		if (rawSlot >= getInventorySize(catSize) && rawSlot < sizeCategories) {
 			ice.setCancelled(true);
@@ -174,7 +174,7 @@ public class XPItemShop extends NewItemShop {
 			return;
 		}
 
-		final MerchantCategory clickedCategory = getCategoryByMaterial(ice.getCurrentItem().getType());
+		MerchantCategory clickedCategory = getCategoryByMaterial(ice.getCurrentItem().getType());
 		if (clickedCategory == null) {
 			if (ice.isShiftClick()) {
 				ice.setCancelled(true);
@@ -188,23 +188,23 @@ public class XPItemShop extends NewItemShop {
 		openBuyInventory(clickedCategory, player, game);
 	}
 
-	private void openBuyInventory(final MerchantCategory category, final Player player, final Game game) {
-		final ArrayList<VillagerTrade> offers = category.getOffers();
-		final int sizeCategories = getCategoriesSize(player);
-		final int sizeItems = offers.size();
-		final int invSize = getBuyInventorySize(sizeCategories, sizeItems);
+	private void openBuyInventory(MerchantCategory category, Player player, Game game) {
+		ArrayList<VillagerTrade> offers = category.getOffers();
+		int sizeCategories = getCategoriesSize(player);
+		int sizeItems = offers.size();
+		int invSize = getBuyInventorySize(sizeCategories, sizeItems);
 
 		player.playSound(player.getLocation(), SoundMachine.get("CLICK", "UI_BUTTON_CLICK"), 10.0F, 1.0F);
 
 		currentCategory = category;
-		final Inventory buyInventory = Bukkit.createInventory(player, invSize, BedwarsRel._l("ingame.shop.name"));
+		Inventory buyInventory = Bukkit.createInventory(player, invSize, BedwarsRel._l("ingame.shop.name"));
 		addCategoriesToInventory(buyInventory, player);
 
 		for (int i = 0; i < offers.size(); i++) {
-			final VillagerTrade trade = offers.get(i);
+			VillagerTrade trade = offers.get(i);
 			if (trade.getItem1().getType() != Material.AIR || trade.getRewardItem().getType() != Material.AIR) {
-				final int slot = getInventorySize(sizeCategories) + i;
-				final ItemStack tradeStack = toItemStack(trade, player, game);
+				int slot = getInventorySize(sizeCategories) + i;
+				ItemStack tradeStack = toItemStack(trade, player, game);
 
 				buyInventory.setItem(slot, tradeStack);
 			}
@@ -212,23 +212,23 @@ public class XPItemShop extends NewItemShop {
 		player.openInventory(buyInventory);
 	}
 
-	private int getBuyInventorySize(final int sizeCategories, final int sizeOffers) {
+	private int getBuyInventorySize(int sizeCategories, int sizeOffers) {
 		return getInventorySize(sizeCategories) + getInventorySize(sizeOffers);
 	}
 
-	private ItemStack toItemStack(final VillagerTrade trade, final Player player, final Game game) {
-		final ItemStack tradeStack = trade.getRewardItem().clone();
-		final Method colorable = Utils.getColorableMethod(tradeStack.getType());
-		final ItemMeta meta = tradeStack.getItemMeta();
-		final ItemStack item1 = trade.getItem1();
-		final ItemStack item2 = trade.getItem2();
+	private ItemStack toItemStack(VillagerTrade trade, Player player, Game game) {
+		ItemStack tradeStack = trade.getRewardItem().clone();
+		Method colorable = Utils.getColorableMethod(tradeStack.getType());
+		ItemMeta meta = tradeStack.getItemMeta();
+		ItemStack item1 = trade.getItem1();
+		ItemStack item2 = trade.getItem2();
 		if (tradeStack.getType().equals(Material.STAINED_GLASS) || tradeStack.getType().equals(Material.WOOL) || tradeStack.getType().equals(Material.STAINED_CLAY)) {
 			tradeStack.setDurability(game.getPlayerTeam(player).getColor().getDyeColor().getWoolData());
 		} else if (colorable != null) {
 			colorable.setAccessible(true);
 			try {
 				colorable.invoke(meta, game.getPlayerTeam(player).getColor().getColor());
-			} catch (final Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -249,16 +249,16 @@ public class XPItemShop extends NewItemShop {
 		return tradeStack;
 	}
 
-	private void handleBuyInventoryClick(final InventoryClickEvent ice, final Game game, final Player player) {
-		final int sizeCategories = getCategoriesSize(player);
-		final ArrayList<VillagerTrade> offers = currentCategory.getOffers();
-		final int sizeItems = offers.size();
-		final int totalSize = getBuyInventorySize(sizeCategories, sizeItems);
+	private void handleBuyInventoryClick(InventoryClickEvent ice, Game game, Player player) {
+		int sizeCategories = getCategoriesSize(player);
+		ArrayList<VillagerTrade> offers = currentCategory.getOffers();
+		int sizeItems = offers.size();
+		int totalSize = getBuyInventorySize(sizeCategories, sizeItems);
 
-		final ItemStack item = ice.getCurrentItem();
+		ItemStack item = ice.getCurrentItem();
 		boolean cancel = false;
 		int bought = 0;
-		final boolean oneStackPerShift = game.getPlayerSettings(player).oneStackPerShift();
+		boolean oneStackPerShift = game.getPlayerSettings(player).oneStackPerShift();
 
 		if (currentCategory == null) {
 			player.closeInventory();
@@ -282,8 +282,8 @@ public class XPItemShop extends NewItemShop {
 			if (item == null || item.getType() == Material.AIR)
 				return;
 
-			final MerchantCategory category = currentCategory;
-			final VillagerTrade trade = getTradingItem(category, item, game, player);
+			MerchantCategory category = currentCategory;
+			VillagerTrade trade = getTradingItem(category, item, game, player);
 
 			if (trade == null)
 				return;
@@ -313,20 +313,20 @@ public class XPItemShop extends NewItemShop {
 		}
 	}
 
-	private boolean buyItem(final VillagerTrade trade, final ItemStack item, final Player player) {
-		final PlayerInventory inventory = player.getInventory();
+	private boolean buyItem(VillagerTrade trade, ItemStack item, Player player) {
+		PlayerInventory inventory = player.getInventory();
 		boolean success = true;
 		if (!(trade instanceof XPVillagerTrade)) {
 			// 非XPtrade 使用旧式购买
 			int item1ToPay = trade.getItem1().getAmount();
 			Iterator<?> stackIterator = inventory.all(trade.getItem1().getType()).entrySet().iterator();
-			final int firstItem1 = inventory.first(trade.getItem1());
+			int firstItem1 = inventory.first(trade.getItem1());
 			if (firstItem1 > -1) {
 				inventory.clear(firstItem1);
 			} else {
 				while (stackIterator.hasNext()) {
-					final Entry<?, ?> entry = (Entry<?, ?>) stackIterator.next();
-					final ItemStack stack = (ItemStack) entry.getValue();
+					Entry<?, ?> entry = (Entry<?, ?>) stackIterator.next();
+					ItemStack stack = (ItemStack) entry.getValue();
 
 					int endAmount = stack.getAmount() - item1ToPay;
 					if (endAmount < 0) {
@@ -346,14 +346,14 @@ public class XPItemShop extends NewItemShop {
 				int item2ToPay = trade.getItem2().getAmount();
 				stackIterator = inventory.all(trade.getItem2().getType()).entrySet().iterator();
 
-				final int firstItem2 = inventory.first(trade.getItem2());
+				int firstItem2 = inventory.first(trade.getItem2());
 				if (firstItem2 > -1) {
 					inventory.clear(firstItem2);
 				} else {
 					while (stackIterator.hasNext()) {
-						final Entry<?, ?> entry = (Entry<?, ?>) stackIterator.next();
+						Entry<?, ?> entry = (Entry<?, ?>) stackIterator.next();
 
-						final ItemStack stack = (ItemStack) entry.getValue();
+						ItemStack stack = (ItemStack) entry.getValue();
 
 						int endAmount = stack.getAmount() - item2ToPay;
 						if (endAmount < 0) {
@@ -373,9 +373,9 @@ public class XPItemShop extends NewItemShop {
 		} else {
 			XPManager.getXPManager(bedwars.getName()).takeXP(player, ((XPVillagerTrade) trade).getXp());
 		}
-		final ItemStack addingItem = item.clone();
-		final ItemMeta meta = addingItem.getItemMeta();
-		final List<String> lore = meta.getLore();
+		ItemStack addingItem = item.clone();
+		ItemMeta meta = addingItem.getItemMeta();
+		List<String> lore = meta.getLore();
 
 		if (!lore.isEmpty()) {
 			lore.remove(lore.size() - 1);
@@ -387,10 +387,10 @@ public class XPItemShop extends NewItemShop {
 		meta.setLore(lore);
 		addingItem.setItemMeta(meta);
 
-		final HashMap<Integer, ? extends ItemStack> notStored = inventory.addItem(addingItem);
+		HashMap<Integer, ? extends ItemStack> notStored = inventory.addItem(addingItem);
 		if (notStored.size() > 0) {
-			final ItemStack notAddedItem = notStored.get(Integer.valueOf(0));
-			final int removingAmount = addingItem.getAmount() - notAddedItem.getAmount();
+			ItemStack notAddedItem = notStored.get(Integer.valueOf(0));
+			int removingAmount = addingItem.getAmount() - notAddedItem.getAmount();
 			addingItem.setAmount(removingAmount);
 			inventory.removeItem(addingItem);
 
@@ -406,13 +406,13 @@ public class XPItemShop extends NewItemShop {
 		return success;
 	}
 
-	private boolean hasEnoughRessource(final Player player, final VillagerTrade trade) {
+	private boolean hasEnoughRessource(Player player, VillagerTrade trade) {
 		if (trade instanceof XPVillagerTrade)
 			return XPManager.getXPManager(bedwars.getName()).hasEnoughXP(player, ((XPVillagerTrade) trade).getXp());
 		else {
-			final ItemStack item1 = trade.getItem1();
-			final ItemStack item2 = trade.getItem2();
-			final PlayerInventory inventory = player.getInventory();
+			ItemStack item1 = trade.getItem1();
+			ItemStack item2 = trade.getItem2();
+			PlayerInventory inventory = player.getInventory();
 
 			if (item2 != null) {
 				if (!inventory.contains(item1.getType(), item1.getAmount()) || !inventory.contains(item2.getType(), item2.getAmount()))
@@ -422,10 +422,10 @@ public class XPItemShop extends NewItemShop {
 		}
 	}
 
-	private VillagerTrade getTradingItem(final MerchantCategory category, final ItemStack stack, final Game game, final Player player) {
-		for (final VillagerTrade trade : category.getOffers()) {
+	private VillagerTrade getTradingItem(MerchantCategory category, ItemStack stack, Game game, Player player) {
+		for (VillagerTrade trade : category.getOffers()) {
 			if (trade.getItem1().getType() != Material.AIR || trade.getRewardItem().getType() != Material.AIR) {
-				final ItemStack iStack = toItemStack(trade, player, game);
+				ItemStack iStack = toItemStack(trade, player, game);
 				if (iStack.getType() == Material.ENDER_CHEST && stack.getType() == Material.ENDER_CHEST)
 					return trade;
 				if ((iStack.getType() == Material.POTION || BedwarsRel.getInstance().getCurrentVersion().startsWith("v1_9") && (iStack.getType().equals(Material.valueOf("TIPPED_ARROW")) || iStack.getType().equals(Material.valueOf("LINGERING_POTION")) || iStack.getType().equals(Material.valueOf("SPLASH_POTION")))) && ((PotionMeta) iStack.getItemMeta()).getCustomEffects().equals(((PotionMeta) stack.getItemMeta()).getCustomEffects()))
@@ -437,8 +437,8 @@ public class XPItemShop extends NewItemShop {
 		return null;
 	}
 
-	private MerchantCategory getCategoryByMaterial(final Material material) {
-		for (final MerchantCategory category : categories) {
+	private MerchantCategory getCategoryByMaterial(Material material) {
+		for (MerchantCategory category : categories) {
 			if (category.getMaterial() == material)
 				return category;
 		}
@@ -447,7 +447,7 @@ public class XPItemShop extends NewItemShop {
 	}
 
 	@Override
-	public void setCurrentCategory(final MerchantCategory category) {
+	public void setCurrentCategory(MerchantCategory category) {
 		currentCategory = category;
 	}
 }

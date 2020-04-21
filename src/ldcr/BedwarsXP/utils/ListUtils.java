@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 public class ListUtils {
-	public static List<String> setToList(final Set<String> set) {
-		final List<String> list = new ArrayList<>();
-		for (final String l : set) {
+	public static List<String> setToList(Set<String> set) {
+		List<String> list = new ArrayList<>();
+		for (String l : set) {
 			list.add(l);
 		}
 		return list;

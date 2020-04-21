@@ -38,7 +38,7 @@ public class Config {
 
 	public static void loadConfig() {
 		BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b正在加载语音文件... | Loading language configuration...");
-		final File languageFile = new File("plugins/BedwarsXP/language.yml");
+		File languageFile = new File("plugins/BedwarsXP/language.yml");
 		if (!languageFile.exists()) {
 			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §b语言文件不存在,正在创建...");
 			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §bWanna english? Just overwrites language.yml with language-en.yml :)");
@@ -47,7 +47,7 @@ public class Config {
 		}
 		try {
 			languageYaml = YamlUtils.loadYamlUTF8(languageFile);
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			languageYaml = new YamlConfiguration();
 			BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §c语言文件加载失败 | Failed to load language");
 			e.printStackTrace();
@@ -97,16 +97,16 @@ public class Config {
 		}
 
 		BedwarsXP.sendConsoleMessage("§6§lBedwarsXP §7>> §a"+BedwarsXP.l18n("LOADING_RESOURCES_VALUE"));
-		final ConfigurationSection resourceSection = io.github.bedwarsrel.BedwarsRel.getInstance().getConfig()
+		ConfigurationSection resourceSection = io.github.bedwarsrel.BedwarsRel.getInstance().getConfig()
 				.getConfigurationSection("resource");
-		for (final String key : resourceSection.getKeys(false)) {
+		for (String key : resourceSection.getKeys(false)) {
 			@SuppressWarnings("unchecked")
-			final List<Map<String, Object>> resourceList = (List<Map<String, Object>>) io.github.bedwarsrel.BedwarsRel
+			List<Map<String, Object>> resourceList = (List<Map<String, Object>>) io.github.bedwarsrel.BedwarsRel
 			.getInstance().getConfig().getList("resource." + key + ".item");
-			for (final Map<String, Object> resource : resourceList) {
-				final ItemStack itemStack = ItemStack.deserialize(resource);
-				final Material mat = itemStack.getType();
-				final int xp = configYaml.getInt("XP." + key, 0);
+			for (Map<String, Object> resource : resourceList) {
+				ItemStack itemStack = ItemStack.deserialize(resource);
+				Material mat = itemStack.getType();
+				int xp = configYaml.getInt("XP." + key, 0);
 				resources.put(mat, xp);
 				resourceskey.add(key);
 				BedwarsXP.sendConsoleMessage(
@@ -123,7 +123,7 @@ public class Config {
 		enabledGameList.addAll(enabledGamesYaml.getStringList("enabledGame"));
 	}
 
-	public static String setGameEnableXP(final String bw, final boolean isEnabled) {
+	public static String setGameEnableXP(String bw, boolean isEnabled) {
 		if (isEnabled) {
 			enabledGameList.add(bw);
 		} else {
@@ -132,14 +132,14 @@ public class Config {
 		enabledGamesYaml.set("enabledGame", ListUtils.setToList(enabledGameList));
 		try {
 			enabledGamesYaml.save(enabledGamesFile);
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getLocalizedMessage();
 		}
 		return "";
 	}
 
-	public static boolean isGameEnabledXP(final String bw) {
+	public static boolean isGameEnabledXP(String bw) {
 		return enabledGameList.contains(bw);
 	}
 }
