@@ -2,6 +2,7 @@ package ldcr.BedwarsXP.utils;
 
 import ldcr.BedwarsXP.BedwarsXP;
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -70,7 +71,7 @@ public class ActionBarUtils {
         if (USE_CHAT) {
             player.sendMessage(message);
         } else if (USE_1_11_API) {
-            player.sendActionBar(message);
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
         } else if (USE_1_7_NMS || USE_1_8_NMS) {
             try {
                 Object objectCraftPlayer = classCraftPlayer.cast(player);
