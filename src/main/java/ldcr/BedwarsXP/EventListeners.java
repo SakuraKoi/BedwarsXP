@@ -44,7 +44,7 @@ public class EventListeners implements Listener {
         if (stack == null) return;
         int count;
         if (stack.hasItemMeta() && stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equals("§b§l&BedwarsXP_DroppedXP")) {
-            count = Integer.valueOf(stack.getItemMeta().getLore().get(0));
+            count = Integer.parseInt(stack.getItemMeta().getLore().get(0));
         } else {
             count = ResourceUtils.convertResToXP(stack);
         }

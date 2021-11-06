@@ -43,7 +43,7 @@ public class EditXPCommandListener implements CommandExecutor {
 				}
 				int xp;
 				try {
-					xp = Integer.valueOf(args[2]);
+					xp = Integer.parseInt(args[2]);
 				} catch (NumberFormatException e) {
 					sender.sendMessage("§6§lBedwarsXP §7>> §c"+BedwarsXP.l18n("EDITXP_XP_IS_NOT_A_NUMBER"));
 					return true;

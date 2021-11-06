@@ -1,8 +1,9 @@
 package sakura.kooi.utils.GithubUpdateChecker;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
-import sakura.kooi.utils.GithubUpdateChecker.org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,12 +29,16 @@ public class UpdateChecker {
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
-        JSONObject json = new JSONObject(result.toString());
-        String tag = json.getString("tag_name");
-        String link = json.getString("html_url");
+        JsonParser parser = new JsonParser();
 
-        if (currentVersion.compareTo(tag) < 0) {
-            callback.accept(link);
+        JsonObject json = parser.parse(result.toString()).getAsJsonObject();
+        if (json.has("tag_name") && json.has("html_url")) {
+            String tag = json.get("tag_name").getAsString();
+            String link = json.get("html_url").getAsString();
+
+            if (currentVersion.compareTo(tag) < 0) {
+                callback.accept(link);
+            }
         }
     }
 }
