@@ -3,7 +3,7 @@ package ldcr.BedwarsXP;
 import ldcr.BedwarsXP.command.BedwarsXPCommandListener;
 import ldcr.BedwarsXP.command.EditXPCommandListener;
 import ldcr.BedwarsXP.utils.ActionBarUtils;
-import ldcr.BedwarsXP.utils.MetricsLite;
+import ldcr.BedwarsXP.utils.Metrics;
 import ldcr.BedwarsXP.utils.ReflectionUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -67,7 +67,7 @@ public class BedwarsXP extends JavaPlugin {
 			}, 100);
 		}
 		try {
-			new MetricsLite(this);
+			new Metrics(this, 3999);
 		} catch (Exception ignored) {}
 	}
 
