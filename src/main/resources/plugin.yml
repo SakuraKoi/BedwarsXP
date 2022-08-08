@@ -1,6 +1,6 @@
 name: BedwarsXP
 main: ldcr.BedwarsXP.BedwarsXP
-version: 2.1
+version: 2.1.2
 author: SakuraKooi
 depend: [BedwarsRel]
 commands:
