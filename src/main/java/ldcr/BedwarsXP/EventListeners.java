@@ -42,12 +42,15 @@ public class EventListeners implements Listener {
         Item entity = e.getItem();
         ItemStack stack = entity.getItemStack();
         if (stack == null) return;
-        int count;
+        Integer count;
         if (stack.hasItemMeta() && stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equals("§b§l&BedwarsXP_DroppedXP")) {
             count = Integer.parseInt(stack.getItemMeta().getLore().get(0));
         } else {
             count = ResourceUtils.convertResToXP(stack);
         }
+
+        if (count == null)
+            return;
 
         if (pickupXP(bw, p, count)) {
             e.setCancelled(true);
