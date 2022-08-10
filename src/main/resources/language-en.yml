@@ -78,3 +78,4 @@ HAS_UPDATE: 'Your BedwarsXP is outdated! Update now -> %link%'
 
 # Others
 ERROR_UNSUPPORTED_VERSION_ACTIONBAR_MAY_NOT_WORK: 'Unsupported server version, ActionBar may not works'
+ERROR_OCCURRED_WHILE_LOADING: 'An unexpected error occurred while loading plugin'
