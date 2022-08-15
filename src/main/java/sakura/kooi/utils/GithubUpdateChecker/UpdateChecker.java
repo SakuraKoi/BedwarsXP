@@ -20,7 +20,7 @@ public class UpdateChecker {
     private Consumer<String> callback;
 
     public void check() throws IOException {
-        URL url = new URL("https://api.github.com/repos/"+user+"/"+repo+"/releases/latest");
+        URL url = new URL("https://api.github.com/repos/" + user + "/" + repo + "/releases/latest");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         @Cleanup BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));

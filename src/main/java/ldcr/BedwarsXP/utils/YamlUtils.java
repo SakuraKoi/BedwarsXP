@@ -9,9 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 public class YamlUtils {
-	public static YamlConfiguration loadYamlUTF8(File file) throws IOException {
-		String yaml = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-		StringReader sr = new StringReader(yaml);
-		return YamlConfiguration.loadConfiguration(sr);
-	}
+    public static YamlConfiguration loadYamlUTF8(File file) throws IOException {
+        String yaml = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+        StringReader sr = new StringReader(yaml);
+        return YamlConfiguration.loadConfiguration(sr);
+    }
 }

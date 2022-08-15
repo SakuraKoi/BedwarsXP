@@ -12,14 +12,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class Config {
+    public static final Map<Material, Integer> resources = new EnumMap<>(Material.class);
+    public static final Set<String> resourceskey = new HashSet<>();
     private static final int CONFIG_VERSION = 2;
-
-    private static YamlConfiguration enabledGamesYaml;
-    private static File enabledGamesFile;
-
-    @Getter
-    private static YamlConfiguration languageYaml;
-
+    private static final Set<String> enabledGameList = new HashSet<>();
     public static boolean disableUpdateChecker;
 
     public static String xpMessage;
@@ -32,10 +28,10 @@ public class Config {
     public static String maxXPMessage;
 
     public static boolean fullXPBedwars;
-    public static final Map<Material, Integer> resources = new EnumMap<>(Material.class);
-    public static final Set<String> resourceskey = new HashSet<>();
-
-    private static final Set<String> enabledGameList = new HashSet<>();
+    private static YamlConfiguration enabledGamesYaml;
+    private static File enabledGamesFile;
+    @Getter
+    private static YamlConfiguration languageYaml;
 
     public static void loadConfig() {
         BedwarsXP.sendConsoleMessage("§b正在加载语言文件... | Loading language configuration...");

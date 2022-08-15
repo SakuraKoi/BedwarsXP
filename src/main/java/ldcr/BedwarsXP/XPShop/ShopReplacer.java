@@ -23,15 +23,15 @@ public class ShopReplacer implements Runnable {
     private final Game game;
     private final CommandSender s;
 
+    private ShopReplacer(String e, CommandSender sender) {
+        s = sender;
+        game = BedwarsRel.getInstance().getGameManager().getGame(e);
+    }
+
     public static void replaceShop(String bw, CommandSender sender) {
         if (!Config.isGameEnabledXP(bw))
             return;
         Bukkit.getScheduler().runTaskLater(BedwarsXP.getInstance(), new ShopReplacer(bw, sender), 20);
-    }
-
-    private ShopReplacer(String e, CommandSender sender) {
-        s = sender;
-        game = BedwarsRel.getInstance().getGameManager().getGame(e);
     }
 
     @Override

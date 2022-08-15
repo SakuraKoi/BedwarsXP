@@ -7,32 +7,33 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class XPVillagerTrade extends VillagerTrade {
-	@Setter private int xp = 0;
+    @Setter
+    private int xp = 0;
 
-	public XPVillagerTrade(VillagerTrade t) {
-		super(t.getItem1(), t.getItem2(), t.getRewardItem());
-		setXp(ResourceUtils.convertResToXP(t.getItem1()) + ResourceUtils.convertResToXP(t.getItem2()));
-	}
+    public XPVillagerTrade(VillagerTrade t) {
+        super(t.getItem1(), t.getItem2(), t.getRewardItem());
+        setXp(ResourceUtils.convertResToXP(t.getItem1()) + ResourceUtils.convertResToXP(t.getItem2()));
+    }
 
-	public XPVillagerTrade(ItemStack convert) {
-		super(convert, null, convert);
-		setXp(ResourceUtils.convertResToXP(convert));
-	}
+    public XPVillagerTrade(ItemStack convert) {
+        super(convert, null, convert);
+        setXp(ResourceUtils.convertResToXP(convert));
+    }
 
-	public XPVillagerTrade(int xp, ItemStack rewardItem) {
-		super(new ItemStack(Material.EXP_BOTTLE, xp), rewardItem);
-		setXp(xp);
-	}
+    public XPVillagerTrade(int xp, ItemStack rewardItem) {
+        super(new ItemStack(Material.EXP_BOTTLE, xp), rewardItem);
+        setXp(xp);
+    }
 
-	/**
-	 * @deprecated It will be removed in later version, use getXp() instead
-	 */
-	@Deprecated
-	public int getXP() {
-		return this.xp;
-	}
+    /**
+     * @deprecated It will be removed in later version, use getXp() instead
+     */
+    @Deprecated
+    public int getXP() {
+        return this.xp;
+    }
 
-	public int getXp() {
-		return this.xp;
-	}
+    public int getXp() {
+        return this.xp;
+    }
 }
