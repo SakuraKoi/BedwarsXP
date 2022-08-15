@@ -18,7 +18,7 @@ ALL_TRADES_USE_XP_ENABLED: '完全经验起床模式已启动'
 LOADING_RESOURCES_VALUE: '开始加载资源价值数据'
 FOUNDED_RESOURCE: '发现资源 %resource% 物品:%material% 价值 %value%'
 
-WARN_YOU_NEEDS_ENABLE_BEDWARSXP_MANULLY: '注意,在新版本中你需要手动使用/bwxp enable来启用游戏的经验起床模式'
+WARN_YOU_NEEDS_ENABLE_BEDWARSXP_MANUALLY: '注意,在新版本中你需要手动使用/bwxp enable来启用游戏的经验起床模式'
 
 # Enabling plugin
 FINDING_BEDWARSREL: '正在寻找BedwarsRel插件...'

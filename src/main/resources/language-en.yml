@@ -22,7 +22,7 @@ ALL_TRADES_USE_XP_ENABLED: 'Enabled All-trade-use-XP'
 LOADING_RESOURCES_VALUE: 'Loading resource data...'
 FOUNDED_RESOURCE: 'Resource %resource% (%material%) = %value%XP'
 
-WARN_YOU_NEEDS_ENABLE_BEDWARSXP_MANULLY: 'You need to use [/bwxp enable] to enable XP mode for a game!'
+WARN_YOU_NEEDS_ENABLE_BEDWARSXP_MANUALLY: 'You need to use [/bwxp enable] to enable XP mode for a game!'
 
 # Enabling plugin
 FINDING_BEDWARSREL: 'Finding BedwarsRel...'
@@ -39,7 +39,7 @@ REPORT_ISSUE_AND_SUGGESTION_HERE: 'BUG Report | Suggestions'
 
 # Commands
 YOU_DONT_HAVE_PERMISSION_TO_EXECUTE_THIS_COMMAND: 'You dont have permission to execute this command'
-UNEXCEPTED_EXCEPTION_CAUGHT: 'An unexcepted error caught while executing the command.'
+UNEXCEPTED_EXCEPTION_CAUGHT: 'An unexpected error caught while executing the command.'
 ERROR_OCCURED: 'Sorry, An error occurred.'
 
 # Main command
