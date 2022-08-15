@@ -12,7 +12,7 @@ public class XPVillagerTrade extends VillagerTrade {
 
     public XPVillagerTrade(VillagerTrade t) {
         super(t.getItem1(), t.getItem2(), t.getRewardItem());
-        setXp(ResourceUtils.convertResToXP(t.getItem1()) + ResourceUtils.convertResToXP(t.getItem2()));
+        setXp(ResourceUtils.convertResToXPExact(t.getItem1()) + ResourceUtils.convertResToXPExact(t.getItem2()));
     }
 
     public XPVillagerTrade(ItemStack convert) {

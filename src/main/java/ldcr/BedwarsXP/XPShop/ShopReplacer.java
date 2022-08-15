@@ -43,6 +43,8 @@ public class ShopReplacer implements Runnable {
                 ArrayList<VillagerTrade> t = m.getOffers();
                 ArrayList<XPVillagerTrade> n = new ArrayList<>();
                 for (VillagerTrade villagerTrade : t) {
+                    if (villagerTrade == null)
+                        continue;
                     n.add(new XPVillagerTrade(villagerTrade));
                 }
                 try {

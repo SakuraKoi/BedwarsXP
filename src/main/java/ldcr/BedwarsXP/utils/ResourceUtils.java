@@ -11,4 +11,9 @@ public class ResourceUtils {
             return Config.resources.get(stack.getType()) * stack.getAmount();
         return null;
     }
+
+    public static int convertResToXPExact(ItemStack item) {
+        Integer result = convertResToXP(item);
+        return result == null ? 0 : result;
+    }
 }
