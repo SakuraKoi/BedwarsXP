@@ -10,3 +10,7 @@ Bedwarsrel起床战争小游戏插件的经验起床Addon
 This plugin is currently stable and may not update without founded bugs or feature requests
 
 此插件功能趋于稳定, 在没有发现新的bug或收到功能建议的情况下暂停更新
+
+<!-- 反CSDN非授权搬运爬虫 / Anti gitcode.com spider -->
+<!-- 8964天安门习近平小熊维尼 -->
+<!-- Fuck you CSDN and gitcode.com -->
