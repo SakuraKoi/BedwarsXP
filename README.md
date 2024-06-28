@@ -5,7 +5,7 @@ BedwarsXP - BedwarsRel addon (A Minecraft Server Plugin)
 
 Bedwarsrel起床战争小游戏插件的经验起床Addon
 
-插件介绍: [点此](http://www.mcbbs.net/thread-667617-1-1.html)
+插件介绍: [点此](https://web.archive.org/web/20190307225721/http://www.mcbbs.net:80/thread-667617-1-1.html)
 
 This plugin is currently stable and may not update without founded bugs or feature requests
 
